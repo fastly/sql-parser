@@ -15,7 +15,6 @@ inner
     AND
     NOT
     INNER
-    INSERT
     INTO
     IN
     ORDER
@@ -43,7 +42,6 @@ inner
     USING
     EXISTS
     DESC
-    VALUES
     SCOPE
     FIRST
     LAST

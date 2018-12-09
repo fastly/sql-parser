@@ -180,7 +180,6 @@ class SQLParser::Parser < Racc::Parser
     AND
     NOT
     INNER
-    INSERT
     INTO
     IN
     ORDER
@@ -208,7 +207,6 @@ class SQLParser::Parser < Racc::Parser
     USING
     EXISTS
     DESC
-    VALUES
     SCOPE
     FIRST
     LAST

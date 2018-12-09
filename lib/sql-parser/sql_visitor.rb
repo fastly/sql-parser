@@ -10,13 +10,6 @@ module SQLParser
       node.accept(self)
     end
 
-    def visit_Insert(o)
-      name = visit(o.table_reference)
-      columns = ' ' + visit(o.column_list) if o.column_list
-      values = ' VALUES ' + visit(o.in_value_list)
-      "INSERT INTO #{name}#{columns}#{values}"
-    end
-
     def visit_DirectSelect(o)
       [
         o.query_expression,

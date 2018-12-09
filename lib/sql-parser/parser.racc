@@ -8,7 +8,6 @@ rule
 
   direct_sql_data_statement
     : direct_select_statement_multiple_rows
-    | insert_specification
 
   direct_select_statement_multiple_rows
     : query_expression order_by_clause { result = SQLParser::Statement::DirectSelect.new(val[0], val[1]) }
@@ -47,19 +46,12 @@ rule
   query_expression
     : query_specification
 
-  insert_specification
-    : INSERT INTO table_reference value_list { result = SQLParser::Statement::Insert.new(val[2], nil, val[3]) }
-    | INSERT INTO table_reference column_list value_list { result = SQLParser::Statement::Insert.new(val[2], val[3], val[4]) }
-
   column_list
     : left_paren in_column_list right_paren { result = SQLParser::Statement::InColumnList.new(val[1]) }
 
   in_column_list
     : value_expression comma in_column_list { result = Array(val[0]) + Array(val[2]) }
     | value_expression
-
-  value_list
-    : VALUES left_paren in_value_list right_paren { result = SQLParser::Statement::InValueList.new(val[2]) }
 
   query_specification
     : SELECT select_list table_expression { result = SQLParser::Statement::Select.new(val[1], val[2]) }
