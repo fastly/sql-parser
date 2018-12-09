@@ -11,7 +11,7 @@ class TestStatement < Minitest::Test
 
   def test_select
     assert_sql 'SELECT 1', select(int(1))
-    assert_sql 'SELECT * FROM users', query(select(all), from(tbl('users')))
+    assert_sql 'SELECT Id FROM User', query(select(col('Id')), from(tbl('User')))
   end
 
   def test_select_list
@@ -23,16 +23,12 @@ class TestStatement < Minitest::Test
     assert_sql 'DISTINCT(username)', distinct(col('username'))
   end
 
-  def test_all
-    assert_sql '*', all
-  end
-
   def test_query
-    assert_sql 'SELECT * FROM users WHERE id = 1 GROUP BY name', query(select(all), from(tbl('users')), where(equals(col('id'), int(1))), group_by(col('name')))
+    assert_sql 'SELECT Id FROM User WHERE Id = 1 GROUP BY name', query(select(col('Id')), from(tbl('User')), where(equals(col('Id'), int(1))), group_by(col('name')))
   end
 
   def test_limit
-    assert_sql 'SELECT * FROM users LIMIT 2', query(select(all), from(tbl('users')), limit(int(2)))
+    assert_sql 'SELECT Id FROM User LIMIT 2', query(select(col('Id')), from(tbl('User')), limit(int(2)))
   end
 
   def test_from_clause
@@ -172,7 +168,7 @@ class TestStatement < Minitest::Test
   end
 
   def test_count
-    assert_sql 'COUNT(*)', SQLParser::Statement::Count.new(all)
+    assert_sql 'COUNT(Id)', SQLParser::Statement::Count.new(col('Id'))
   end
 
   def test_table
@@ -270,10 +266,6 @@ class TestStatement < Minitest::Test
 
   def equals(left, right)
     SQLParser::Statement::Equals.new(left, right)
-  end
-
-  def all
-    SQLParser::Statement::All.new
   end
 
   def str(value)

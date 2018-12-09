@@ -98,9 +98,6 @@ module SQLParser
 
     end
 
-    class All < Node
-    end
-
     class FromClause < Node
 
       def initialize(tables)

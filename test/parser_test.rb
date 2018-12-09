@@ -3,222 +3,223 @@ require 'test_helper'
 class TestParser < Minitest::Test
 
   def test_case_insensitivity
-    assert_sql 'SELECT * FROM users WHERE id = 1', 'select * from users where id = 1'
+    assert_sql 'SELECT Id FROM User WHERE Id = 1', 'select Id from User where Id = 1'
   end
 
   def test_subquery_in_where_clause
-    assert_understands 'SELECT * FROM t1 WHERE id > (SELECT SUM(a) FROM t2)'
+    assert_understands 'SELECT Id FROM t1 WHERE Id > (SELECT SUM(a) FROM t2)'
   end
 
   def test_limits
-    assert_understands 'SELECT * FROM t1 LIMIT 1'
+    assert_understands 'SELECT Id FROM t1 LIMIT 1'
   end
 
   def test_order_by_constant
-    assert_understands 'SELECT * FROM users ORDER BY 1'
-    assert_understands 'SELECT * FROM users ORDER BY 1 ASC'
-    assert_understands 'SELECT * FROM users ORDER BY 1 DESC'
+    assert_understands 'SELECT Id FROM User ORDER BY 1'
+    assert_understands 'SELECT Id FROM User ORDER BY 1 ASC'
+    assert_understands 'SELECT Id FROM User ORDER BY 1 DESC'
   end
 
   def test_qualified_table
-    assert_understands 'SELECT * FROM foo.bar'
+    assert_understands 'SELECT Id FROM Foo.Bar'
   end
 
   def test_order
-    assert_understands 'SELECT * FROM users ORDER BY name'
-    assert_understands 'SELECT * FROM users ORDER BY name ASC'
-    assert_understands 'SELECT * FROM users ORDER BY name DESC'
+    assert_understands 'SELECT Id FROM User ORDER BY Name'
+    assert_understands 'SELECT Id FROM User ORDER BY Name ASC'
+    assert_understands 'SELECT Id FROM User ORDER BY Name DESC'
   end
 
+  # TODO Remove joins
   def test_full_outer_join
-    assert_understands 'SELECT * FROM t1 FULL OUTER JOIN t2 ON t1.a = t2.a'
-    assert_understands 'SELECT * FROM t1 FULL OUTER JOIN t2 ON t1.a = t2.a FULL OUTER JOIN t3 ON t2.a = t3.a'
-    assert_understands 'SELECT * FROM t1 FULL OUTER JOIN t2 USING (a)'
-    assert_understands 'SELECT * FROM t1 FULL OUTER JOIN t2 USING (a) FULL OUTER JOIN t3 USING (b)'
+    assert_understands 'SELECT Id FROM t1 FULL OUTER JOIN t2 ON t1.a = t2.a'
+    assert_understands 'SELECT Id FROM t1 FULL OUTER JOIN t2 ON t1.a = t2.a FULL OUTER JOIN t3 ON t2.a = t3.a'
+    assert_understands 'SELECT Id FROM t1 FULL OUTER JOIN t2 USING (a)'
+    assert_understands 'SELECT Id FROM t1 FULL OUTER JOIN t2 USING (a) FULL OUTER JOIN t3 USING (b)'
   end
 
   def test_full_join
-    assert_understands 'SELECT * FROM t1 FULL JOIN t2 ON t1.a = t2.a'
-    assert_understands 'SELECT * FROM t1 FULL JOIN t2 ON t1.a = t2.a FULL JOIN t3 ON t2.a = t3.a'
-    assert_understands 'SELECT * FROM t1 FULL JOIN t2 USING (a)'
-    assert_understands 'SELECT * FROM t1 FULL JOIN t2 USING (a) FULL JOIN t3 USING (b)'
+    assert_understands 'SELECT Id FROM t1 FULL JOIN t2 ON t1.a = t2.a'
+    assert_understands 'SELECT Id FROM t1 FULL JOIN t2 ON t1.a = t2.a FULL JOIN t3 ON t2.a = t3.a'
+    assert_understands 'SELECT Id FROM t1 FULL JOIN t2 USING (a)'
+    assert_understands 'SELECT Id FROM t1 FULL JOIN t2 USING (a) FULL JOIN t3 USING (b)'
   end
 
   def test_right_outer_join
-    assert_understands 'SELECT * FROM t1 RIGHT OUTER JOIN t2 ON t1.a = t2.a'
-    assert_understands 'SELECT * FROM t1 RIGHT OUTER JOIN t2 ON t1.a = t2.a RIGHT OUTER JOIN t3 ON t2.a = t3.a'
-    assert_understands 'SELECT * FROM t1 RIGHT OUTER JOIN t2 USING (a)'
-    assert_understands 'SELECT * FROM t1 RIGHT OUTER JOIN t2 USING (a) RIGHT OUTER JOIN t3 USING (b)'
+    assert_understands 'SELECT Id FROM t1 RIGHT OUTER JOIN t2 ON t1.a = t2.a'
+    assert_understands 'SELECT Id FROM t1 RIGHT OUTER JOIN t2 ON t1.a = t2.a RIGHT OUTER JOIN t3 ON t2.a = t3.a'
+    assert_understands 'SELECT Id FROM t1 RIGHT OUTER JOIN t2 USING (a)'
+    assert_understands 'SELECT Id FROM t1 RIGHT OUTER JOIN t2 USING (a) RIGHT OUTER JOIN t3 USING (b)'
   end
 
   def test_right_join
-    assert_understands 'SELECT * FROM t1 RIGHT JOIN t2 ON t1.a = t2.a'
-    assert_understands 'SELECT * FROM t1 RIGHT JOIN t2 ON t1.a = t2.a RIGHT JOIN t3 ON t2.a = t3.a'
-    assert_understands 'SELECT * FROM t1 RIGHT JOIN t2 USING (a)'
-    assert_understands 'SELECT * FROM t1 RIGHT JOIN t2 USING (a) RIGHT JOIN t3 USING (b)'
+    assert_understands 'SELECT Id FROM t1 RIGHT JOIN t2 ON t1.a = t2.a'
+    assert_understands 'SELECT Id FROM t1 RIGHT JOIN t2 ON t1.a = t2.a RIGHT JOIN t3 ON t2.a = t3.a'
+    assert_understands 'SELECT Id FROM t1 RIGHT JOIN t2 USING (a)'
+    assert_understands 'SELECT Id FROM t1 RIGHT JOIN t2 USING (a) RIGHT JOIN t3 USING (b)'
   end
 
   def test_left_outer_join
-    assert_understands 'SELECT * FROM t1 LEFT OUTER JOIN t2 ON t1.a = t2.a'
-    assert_understands 'SELECT * FROM t1 LEFT OUTER JOIN t2 ON t1.a = t2.a LEFT OUTER JOIN t3 ON t2.a = t3.a'
-    assert_understands 'SELECT * FROM t1 LEFT OUTER JOIN t2 USING (a)'
-    assert_understands 'SELECT * FROM t1 LEFT OUTER JOIN t2 USING (a) LEFT OUTER JOIN t3 USING (b)'
+    assert_understands 'SELECT Id FROM t1 LEFT OUTER JOIN t2 ON t1.a = t2.a'
+    assert_understands 'SELECT Id FROM t1 LEFT OUTER JOIN t2 ON t1.a = t2.a LEFT OUTER JOIN t3 ON t2.a = t3.a'
+    assert_understands 'SELECT Id FROM t1 LEFT OUTER JOIN t2 USING (a)'
+    assert_understands 'SELECT Id FROM t1 LEFT OUTER JOIN t2 USING (a) LEFT OUTER JOIN t3 USING (b)'
   end
 
   def test_left_join
-    assert_understands 'SELECT * FROM t1 LEFT JOIN t2 ON t1.a = t2.a'
-    assert_understands 'SELECT * FROM t1 LEFT JOIN t2 ON t1.a = t2.a LEFT JOIN t3 ON t2.a = t3.a'
-    assert_understands 'SELECT * FROM t1 LEFT JOIN t2 USING (a)'
-    assert_understands 'SELECT * FROM t1 LEFT JOIN t2 USING (a) LEFT JOIN t3 USING (b)'
+    assert_understands 'SELECT Id FROM t1 LEFT JOIN t2 ON t1.a = t2.a'
+    assert_understands 'SELECT Id FROM t1 LEFT JOIN t2 ON t1.a = t2.a LEFT JOIN t3 ON t2.a = t3.a'
+    assert_understands 'SELECT Id FROM t1 LEFT JOIN t2 USING (a)'
+    assert_understands 'SELECT Id FROM t1 LEFT JOIN t2 USING (a) LEFT JOIN t3 USING (b)'
   end
 
   def test_inner_join
-    assert_understands 'SELECT * FROM t1 INNER JOIN t2 ON t1.a = t2.a'
-    assert_understands 'SELECT * FROM t1 INNER JOIN t2 ON t1.a = t2.a INNER JOIN t3 ON t2.a = t3.a'
-    assert_understands 'SELECT * FROM t1 INNER JOIN t2 USING (a)'
-    assert_understands 'SELECT * FROM t1 INNER JOIN t2 USING (a) INNER JOIN t3 USING (b)'
+    assert_understands 'SELECT Id FROM t1 INNER JOIN t2 ON t1.a = t2.a'
+    assert_understands 'SELECT Id FROM t1 INNER JOIN t2 ON t1.a = t2.a INNER JOIN t3 ON t2.a = t3.a'
+    assert_understands 'SELECT Id FROM t1 INNER JOIN t2 USING (a)'
+    assert_understands 'SELECT Id FROM t1 INNER JOIN t2 USING (a) INNER JOIN t3 USING (b)'
   end
 
   def test_cross_join
-    assert_understands 'SELECT * FROM t1 CROSS JOIN t2'
-    assert_understands 'SELECT * FROM t1 CROSS JOIN t2 CROSS JOIN t3'
+    assert_understands 'SELECT Id FROM t1 CROSS JOIN t2'
+    assert_understands 'SELECT Id FROM t1 CROSS JOIN t2 CROSS JOIN t3'
   end
 
   # The expression
-  #   SELECT * FROM t1, t2
+  #   SELECT Id FROM t1, t2
   # is just syntactic sugar for
-  #   SELECT * FROM t1 CROSS JOIN t2
+  #   SELECT Id FROM t1 CROSS JOIN t2
   def test_cross_join_syntactic_sugar
-    assert_sql 'SELECT * FROM t1 CROSS JOIN t2', 'SELECT * FROM t1, t2'
-    assert_sql 'SELECT * FROM t1 CROSS JOIN t2 CROSS JOIN t3', 'SELECT * FROM t1, t2, t3'
+    assert_sql 'SELECT Id FROM t1 CROSS JOIN t2', 'SELECT Id FROM t1, t2'
+    assert_sql 'SELECT Id FROM t1 CROSS JOIN t2 CROSS JOIN t3', 'SELECT Id FROM t1, t2, t3'
   end
 
   def test_having
-    assert_understands 'SELECT * FROM users HAVING id = 1'
+    assert_understands 'SELECT Id FROM Users HAVING Id = 1'
   end
 
   def test_group_by
-    assert_understands 'SELECT * FROM users GROUP BY name'
-    assert_understands 'SELECT * FROM users GROUP BY users.name'
-    assert_understands 'SELECT * FROM users GROUP BY name, id'
-    assert_understands 'SELECT * FROM users GROUP BY users.name, users.id'
+    assert_understands 'SELECT Id FROM User GROUP BY Name'
+    assert_understands 'SELECT Id FROM User GROUP BY User.Name'
+    assert_understands 'SELECT Id FROM User GROUP BY Name, Id'
+    assert_understands 'SELECT Id FROM User GROUP BY User.Name, User.Id'
   end
 
   def test_or
-    assert_understands 'SELECT * FROM users WHERE (id = 1 OR age = 18)'
+    assert_understands 'SELECT Id FROM User WHERE (Id = 1 OR Age = 18)'
   end
 
   def test_and
-    assert_understands 'SELECT * FROM users WHERE (id = 1 AND age = 18)'
+    assert_understands 'SELECT Id FROM User WHERE (Id = 1 AND Age = 18)'
   end
 
   def test_not
-    assert_sql 'SELECT * FROM users WHERE id <> 1', 'SELECT * FROM users WHERE NOT id = 1'
-    assert_sql 'SELECT * FROM users WHERE id NOT IN (1, 2, 3)', 'SELECT * FROM users WHERE NOT id IN (1, 2, 3)'
-    assert_sql 'SELECT * FROM users WHERE id NOT BETWEEN 1 AND 3', 'SELECT * FROM users WHERE NOT id BETWEEN 1 AND 3'
-    assert_sql "SELECT * FROM users WHERE name NOT LIKE 'A%'", "SELECT * FROM users WHERE NOT name LIKE 'A%'"
+    assert_sql 'SELECT Id FROM User WHERE Id <> 1', 'SELECT Id FROM User WHERE NOT Id = 1'
+    assert_sql 'SELECT Id FROM User WHERE Id NOT IN (1, 2, 3)', 'SELECT Id FROM User WHERE NOT Id IN (1, 2, 3)'
+    assert_sql 'SELECT Id FROM User WHERE Id NOT BETWEEN 1 AND 3', 'SELECT Id FROM User WHERE NOT Id BETWEEN 1 AND 3'
+    assert_sql "SELECT Id FROM User WHERE Name NOT LIKE 'A%'", "SELECT Id FROM User WHERE NOT Name LIKE 'A%'"
 
     # Shouldn't negate subqueries
-    assert_understands 'SELECT * FROM users WHERE NOT EXISTS (SELECT id FROM users WHERE id = 1)'
+    assert_understands 'SELECT Id FROM User WHERE NOT EXISTS (SELECT Id FROM User WHERE Id = 1)'
   end
 
   def test_not_exists
-    assert_understands 'SELECT * FROM users WHERE NOT EXISTS (SELECT id FROM users)'
+    assert_understands 'SELECT Id FROM User WHERE NOT EXISTS (SELECT Id FROM User)'
   end
 
   def test_exists
-    assert_understands 'SELECT * FROM users WHERE EXISTS (SELECT id FROM users)'
+    assert_understands 'SELECT Id FROM User WHERE EXISTS (SELECT Id FROM User)'
   end
 
   def test_is_not_null
-    assert_understands 'SELECT * FROM users WHERE deleted_at IS NOT NULL'
+    assert_understands 'SELECT Id FROM User WHERE deleted_at IS NOT NULL'
   end
 
   def test_is_null
-    assert_understands 'SELECT * FROM users WHERE deleted_at IS NULL'
+    assert_understands 'SELECT Id FROM User WHERE deleted_at IS NULL'
   end
 
   def test_not_like
-    assert_understands "SELECT * FROM users WHERE name NOT LIKE 'Joe%'"
+    assert_understands "SELECT Id FROM User WHERE name NOT LIKE 'Joe%'"
   end
 
   def test_like
-    assert_understands "SELECT * FROM users WHERE name LIKE 'Joe%'"
+    assert_understands "SELECT Id FROM User WHERE name LIKE 'Joe%'"
   end
 
   def test_not_in
-    assert_understands 'SELECT * FROM users WHERE id NOT IN (1, 2, 3)'
-    assert_understands 'SELECT * FROM users WHERE id NOT IN (SELECT id FROM users WHERE age = 18)'
+    assert_understands 'SELECT Id FROM User WHERE Id NOT IN (1, 2, 3)'
+    assert_understands 'SELECT Id FROM User WHERE Id NOT IN (SELECT Id FROM User WHERE age = 18)'
   end
 
   def test_in
-    assert_understands 'SELECT * FROM users WHERE id IN (1, 2, 3)'
-    assert_understands 'SELECT * FROM users WHERE id IN (SELECT id FROM users WHERE age = 18)'
+    assert_understands 'SELECT Id FROM User WHERE Id IN (1, 2, 3)'
+    assert_understands 'SELECT Id FROM User WHERE Id IN (SELECT Id FROM User WHERE age = 18)'
   end
 
   def test_not_between
-    assert_understands 'SELECT * FROM users WHERE id NOT BETWEEN 1 AND 3'
+    assert_understands 'SELECT Id FROM User WHERE Id NOT BETWEEN 1 AND 3'
   end
 
   def test_between
-    assert_understands 'SELECT * FROM users WHERE id BETWEEN 1 AND 3'
+    assert_understands 'SELECT Id FROM User WHERE Id BETWEEN 1 AND 3'
   end
 
   def test_gte
-    assert_understands 'SELECT * FROM users WHERE id >= 1'
+    assert_understands 'SELECT Id FROM User WHERE Id >= 1'
   end
 
   def test_lte
-    assert_understands 'SELECT * FROM users WHERE id <= 1'
+    assert_understands 'SELECT Id FROM User WHERE Id <= 1'
   end
 
   def test_gt
-    assert_understands 'SELECT * FROM users WHERE id > 1'
+    assert_understands 'SELECT Id FROM User WHERE Id > 1'
   end
 
   def test_lt
-    assert_understands 'SELECT * FROM users WHERE id < 1'
+    assert_understands 'SELECT Id FROM User WHERE Id < 1'
   end
 
   def test_not_equals
-    assert_sql 'SELECT * FROM users WHERE id <> 1', 'SELECT * FROM users WHERE id != 1'
-    assert_understands 'SELECT * FROM users WHERE id <> 1'
+    assert_sql 'SELECT Id FROM User WHERE Id <> 1', 'SELECT Id FROM User WHERE Id != 1'
+    assert_understands 'SELECT Id FROM User WHERE Id <> 1'
   end
 
   def test_equals
-    assert_understands 'SELECT * FROM users WHERE id = 1'
+    assert_understands 'SELECT Id FROM User WHERE Id = 1'
   end
 
   def test_where_clause
-    assert_understands 'SELECT * FROM users WHERE 1 = 1'
+    assert_understands 'SELECT Id FROM User WHERE 1 = 1'
   end
 
   def test_sum
-    assert_understands 'SELECT SUM(messages_count) FROM users'
+    assert_understands 'SELECT SUM(messages_count) FROM User'
   end
 
   def test_min
-    assert_understands 'SELECT MIN(age) FROM users'
+    assert_understands 'SELECT MIN(age) FROM User'
   end
 
   def test_max
-    assert_understands 'SELECT MAX(age) FROM users'
+    assert_understands 'SELECT MAX(age) FROM User'
   end
 
   def test_avg
-    assert_understands 'SELECT AVG(age) FROM users'
+    assert_understands 'SELECT AVG(age) FROM User'
   end
 
   def test_count
-    assert_understands 'SELECT COUNT(*) FROM users'
-    assert_understands 'SELECT COUNT(id) FROM users'
+    assert_understands 'SELECT COUNT() FROM User'
+    assert_understands 'SELECT COUNT(Id) FROM User'
   end
 
   def test_from_clause
-    assert_understands 'SELECT 1 FROM users'
-    assert_understands 'SELECT id FROM users'
-    assert_understands 'SELECT users.id FROM users'
-    assert_understands 'SELECT * FROM users'
+    assert_understands 'SELECT 1 FROM User'
+    assert_understands 'SELECT Id FROM User'
+    assert_understands 'SELECT User.Id FROM User'
+    assert_understands 'SELECT Id FROM User'
   end
 
   def test_select_list

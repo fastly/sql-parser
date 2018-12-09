@@ -23,16 +23,14 @@ rule
     : value_expression comma in_column_list { result = Array(val[0]) + Array(val[2]) }
     | value_expression
 
-  # TODO: remove asterisk and SQLParser::Statement::All
   select_list
-    : asterisk { result = SQLParser::Statement::All.new }
-    | select_sublist { result = SQLParser::Statement::SelectList.new(val[0]) }
+    : select_sublist { result = SQLParser::Statement::SelectList.new(val[0]) }
 
   select_sublist
     : derived_column comma select_sublist { result = Array(val[0]) + Array(val[2]) }
     | derived_column
 
-  # TODO: Only fields, aggregate functions and subqueries in SELECT  
+  # TODO: Only fields, aggregate functions and subqueries in SELECT
   derived_column
     : value_expression column_name { result = SQLParser::Statement::As.new(val[0], val[1]) }
     | value_expression
@@ -220,7 +218,7 @@ rule
   value_expression_primary
     : unsigned_value_specification
     | column_reference
-    | set_function_specification
+    | general_set_function
     | left_paren value_expression right_paren { result = val[1] }
 
   unsigned_value_specification
@@ -237,12 +235,9 @@ rule
   qualifier
     : table_name
 
-  set_function_specification
-    : COUNT left_paren asterisk right_paren { result = SQLParser::Statement::Count.new(SQLParser::Statement::All.new) }
-    | general_set_function
-
   general_set_function
     : COUNT left_paren value_expression right_paren { result = SQLParser::Statement::Count.new(val[2]) }
+    | COUNT left_paren right_paren { result = SQLParser::Statement::Count.new(nil) }
     | AVG left_paren value_expression right_paren { result = SQLParser::Statement::Average.new(val[2]) }
     | MAX left_paren value_expression right_paren { result = SQLParser::Statement::Maximum.new(val[2]) }
     | MIN left_paren value_expression right_paren { result = SQLParser::Statement::Minimum.new(val[2]) }

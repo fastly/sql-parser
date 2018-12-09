@@ -33,10 +33,6 @@ module SQLParser
       "DISTINCT(#{visit(o.column)})"
     end
 
-    def visit_All(o)
-      '*'
-    end
-
     def visit_Query(o)
       [
         o.select_clause,
@@ -207,7 +203,7 @@ module SQLParser
     end
 
     def visit_Count(o)
-      aggregate('COUNT', o)
+      "COUNT(#{visit(o.column) if o.column})"
     end
 
     def visit_Function(o)
