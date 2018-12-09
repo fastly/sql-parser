@@ -1,15 +1,15 @@
 lib = File.expand_path('lib', __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'sql-parser/version'
+require 'soql-parser/version'
 
 Gem::Specification.new do |s|
-  s.name          = 'sql-parser'
-  s.version       = SQLParser::VERSION
+  s.name          = 'soql-parser'
+  s.version       = SOQLParser::VERSION
   s.authors       = ['Dray Lacy', 'Louis Mullie']
   s.email         = ['dray@izea.com', 'louis.mullie@gmail.com']
-  s.homepage      = 'https://github.com/louismullie/sql-parser'
-  s.summary       = %q{ Ruby library for parsing and generating SQL statements }
-  s.description   = %q{ A Racc-based Ruby parser and generator for SQL statements }
+  s.homepage      = 'https://github.com/louismullie/soql-parser'
+  s.summary       = %q{ Ruby library for parsing and generating SOQL statements }
+  s.description   = %q{ A Racc-based Ruby parser and generator for SOQL statements }
   s.license       = 'MIT'
 
   # Specify which files should be added to the gem when it is released.

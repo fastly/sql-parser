@@ -1,4 +1,4 @@
-module SQLParser
+module SOQLParser
 
   module Statement
 
@@ -16,8 +16,8 @@ module SQLParser
         end
       end
 
-      def to_sql
-        SQLVisitor.new.visit(self)
+      def to_soql
+        SOQLVisitor.new.visit(self)
       end
 
       private

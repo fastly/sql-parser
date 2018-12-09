@@ -1,4 +1,4 @@
-class SQLParser::Parser
+class SOQLParser::Parser
 
 option
   ignorecase

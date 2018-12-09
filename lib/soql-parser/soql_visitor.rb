@@ -1,6 +1,6 @@
-module SQLParser
+module SOQLParser
 
-  class SQLVisitor
+  class SOQLVisitor
 
     def initialize
       @negated = false

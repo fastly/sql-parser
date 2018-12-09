@@ -8,13 +8,13 @@ require 'racc/parser.rb'
 
 require File.dirname(__FILE__) + '/parser.rex.rb'
 
-module SQLParser
+module SOQLParser
   class Parser < Racc::Parser
 
 module_eval(<<'...end parser.racc/module_eval...', 'parser.racc', 288)
 
-def self.parse(sql)
-  new.scan_str(sql)
+def self.parse(soql)
+  new.scan_str(soql)
 end
 ...end parser.racc/module_eval...
 ##### State transition tables begin ###
@@ -702,21 +702,21 @@ Racc_debug_parser = false
 
 module_eval(<<'.,.,', 'parser.racc', 5)
   def _reduce_1(val, _values, result)
-     result = SQLParser::Statement::Query.new(val[0], val[1], val[2], val[3], val[4], val[5], val[6], val[7]) 
+     result = SOQLParser::Statement::Query.new(val[0], val[1], val[2], val[3], val[4], val[5], val[6], val[7]) 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.racc', 8)
   def _reduce_2(val, _values, result)
-     result = SQLParser::Statement::Select.new(val[1]) 
+     result = SOQLParser::Statement::Select.new(val[1]) 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.racc', 13)
   def _reduce_3(val, _values, result)
-     result = SQLParser::Statement::Subquery.new(val[1]) 
+     result = SOQLParser::Statement::Subquery.new(val[1]) 
     result
   end
 .,.,
@@ -725,7 +725,7 @@ module_eval(<<'.,.,', 'parser.racc', 13)
 
 module_eval(<<'.,.,', 'parser.racc', 19)
   def _reduce_5(val, _values, result)
-     result = SQLParser::Statement::SelectList.new(val[0]) 
+     result = SOQLParser::Statement::SelectList.new(val[0]) 
     result
   end
 .,.,
@@ -741,7 +741,7 @@ module_eval(<<'.,.,', 'parser.racc', 22)
 
 module_eval(<<'.,.,', 'parser.racc', 27)
   def _reduce_8(val, _values, result)
-     result = SQLParser::Statement::As.new(val[0], val[1]) 
+     result = SOQLParser::Statement::As.new(val[0], val[1]) 
     result
   end
 .,.,
@@ -750,7 +750,7 @@ module_eval(<<'.,.,', 'parser.racc', 27)
 
 module_eval(<<'.,.,', 'parser.racc', 31)
   def _reduce_10(val, _values, result)
-     result = SQLParser::Statement::FromClause.new(val[1]) 
+     result = SOQLParser::Statement::FromClause.new(val[1]) 
     result
   end
 .,.,
@@ -766,14 +766,14 @@ module_eval(<<'.,.,', 'parser.racc', 34)
 
 module_eval(<<'.,.,', 'parser.racc', 38)
   def _reduce_13(val, _values, result)
-     result = SQLParser::Statement::As.new(val[0], val[2]) 
+     result = SOQLParser::Statement::As.new(val[0], val[2]) 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.racc', 39)
   def _reduce_14(val, _values, result)
-     result = SQLParser::Statement::As.new(val[0], val[1]) 
+     result = SOQLParser::Statement::As.new(val[0], val[1]) 
     result
   end
 .,.,
@@ -782,21 +782,21 @@ module_eval(<<'.,.,', 'parser.racc', 39)
 
 module_eval(<<'.,.,', 'parser.racc', 41)
   def _reduce_16(val, _values, result)
-     result = SQLParser::Statement::As.new(SQLParser::Statement::Table.new(val[0], val[2]), val[4]) 
+     result = SOQLParser::Statement::As.new(SOQLParser::Statement::Table.new(val[0], val[2]), val[4]) 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.racc', 42)
   def _reduce_17(val, _values, result)
-     result = SQLParser::Statement::As.new(SQLParser::Statement::Table.new(val[0], val[2]), val[3]) 
+     result = SOQLParser::Statement::As.new(SOQLParser::Statement::Table.new(val[0], val[2]), val[3]) 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.racc', 43)
   def _reduce_18(val, _values, result)
-     result = SQLParser::Statement::Table.new(val[0], val[2]) 
+     result = SOQLParser::Statement::Table.new(val[0], val[2]) 
     result
   end
 .,.,
@@ -807,7 +807,7 @@ module_eval(<<'.,.,', 'parser.racc', 43)
 
 module_eval(<<'.,.,', 'parser.racc', 50)
   def _reduce_21(val, _values, result)
-     result = SQLParser::Statement::UsingScope.new(val[2]) 
+     result = SOQLParser::Statement::UsingScope.new(val[2]) 
     result
   end
 .,.,
@@ -816,7 +816,7 @@ module_eval(<<'.,.,', 'parser.racc', 50)
 
 module_eval(<<'.,.,', 'parser.racc', 54)
   def _reduce_23(val, _values, result)
-     result = SQLParser::Statement::WhereClause.new(val[1]) 
+     result = SOQLParser::Statement::WhereClause.new(val[1]) 
     result
   end
 .,.,
@@ -825,7 +825,7 @@ module_eval(<<'.,.,', 'parser.racc', 54)
 
 module_eval(<<'.,.,', 'parser.racc', 58)
   def _reduce_25(val, _values, result)
-     result = SQLParser::Statement::GroupByClause.new(val[2]) 
+     result = SOQLParser::Statement::GroupByClause.new(val[2]) 
     result
   end
 .,.,
@@ -845,7 +845,7 @@ module_eval(<<'.,.,', 'parser.racc', 61)
 
 module_eval(<<'.,.,', 'parser.racc', 69)
   def _reduce_30(val, _values, result)
-     result = SQLParser::Statement::HavingClause.new(val[1]) 
+     result = SOQLParser::Statement::HavingClause.new(val[1]) 
     result
   end
 .,.,
@@ -854,7 +854,7 @@ module_eval(<<'.,.,', 'parser.racc', 69)
 
 module_eval(<<'.,.,', 'parser.racc', 73)
   def _reduce_32(val, _values, result)
-     result = SQLParser::Statement::OrderBy.new(val[2]) 
+     result = SOQLParser::Statement::OrderBy.new(val[2]) 
     result
   end
 .,.,
@@ -863,7 +863,7 @@ module_eval(<<'.,.,', 'parser.racc', 73)
 
 module_eval(<<'.,.,', 'parser.racc', 77)
   def _reduce_34(val, _values, result)
-     result = SQLParser::Statement::LimitClause.new(SQLParser::Statement::Integer.new(val[1])) 
+     result = SOQLParser::Statement::LimitClause.new(SOQLParser::Statement::Integer.new(val[1])) 
     result
   end
 .,.,
@@ -872,28 +872,28 @@ module_eval(<<'.,.,', 'parser.racc', 77)
 
 module_eval(<<'.,.,', 'parser.racc', 84)
   def _reduce_36(val, _values, result)
-     result = SQLParser::Statement::Not.new(SQLParser::Statement::Between.new(val[0], val[3], val[5])) 
+     result = SOQLParser::Statement::Not.new(SOQLParser::Statement::Between.new(val[0], val[3], val[5])) 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.racc', 85)
   def _reduce_37(val, _values, result)
-     result = SQLParser::Statement::Between.new(val[0], val[2], val[4]) 
+     result = SOQLParser::Statement::Between.new(val[0], val[2], val[4]) 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.racc', 88)
   def _reduce_38(val, _values, result)
-     result = SQLParser::Statement::Not.new(SQLParser::Statement::In.new(val[0], val[3])) 
+     result = SOQLParser::Statement::Not.new(SOQLParser::Statement::In.new(val[0], val[3])) 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.racc', 89)
   def _reduce_39(val, _values, result)
-     result = SQLParser::Statement::In.new(val[0], val[2]) 
+     result = SOQLParser::Statement::In.new(val[0], val[2]) 
     result
   end
 .,.,
@@ -902,7 +902,7 @@ module_eval(<<'.,.,', 'parser.racc', 89)
 
 module_eval(<<'.,.,', 'parser.racc', 93)
   def _reduce_41(val, _values, result)
-     result = SQLParser::Statement::InValueList.new(val[1]) 
+     result = SOQLParser::Statement::InValueList.new(val[1]) 
     result
   end
 .,.,
@@ -918,42 +918,42 @@ module_eval(<<'.,.,', 'parser.racc', 96)
 
 module_eval(<<'.,.,', 'parser.racc', 103)
   def _reduce_44(val, _values, result)
-     result = SQLParser::Statement::Not.new(SQLParser::Statement::Like.new(val[0], val[3])) 
+     result = SOQLParser::Statement::Not.new(SOQLParser::Statement::Like.new(val[0], val[3])) 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.racc', 104)
   def _reduce_45(val, _values, result)
-     result = SQLParser::Statement::Like.new(val[0], val[2]) 
+     result = SOQLParser::Statement::Like.new(val[0], val[2]) 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.racc', 107)
   def _reduce_46(val, _values, result)
-     result = SQLParser::Statement::Not.new(SQLParser::Statement::Is.new(val[0], SQLParser::Statement::Null.new)) 
+     result = SOQLParser::Statement::Not.new(SOQLParser::Statement::Is.new(val[0], SOQLParser::Statement::Null.new)) 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.racc', 108)
   def _reduce_47(val, _values, result)
-     result = SQLParser::Statement::Is.new(val[0], SQLParser::Statement::Null.new) 
+     result = SOQLParser::Statement::Is.new(val[0], SOQLParser::Statement::Null.new) 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.racc', 111)
   def _reduce_48(val, _values, result)
-     result = SQLParser::Statement::Exists.new(val[1]) 
+     result = SOQLParser::Statement::Exists.new(val[1]) 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.racc', 115)
   def _reduce_49(val, _values, result)
-     result = SQLParser::Statement::Table.new(val[0]) 
+     result = SOQLParser::Statement::Table.new(val[0]) 
     result
   end
 .,.,
@@ -962,7 +962,7 @@ module_eval(<<'.,.,', 'parser.racc', 115)
 
 module_eval(<<'.,.,', 'parser.racc', 120)
   def _reduce_51(val, _values, result)
-     result = SQLParser::Statement::Or.new(val[0], val[2]) 
+     result = SOQLParser::Statement::Or.new(val[0], val[2]) 
     result
   end
 .,.,
@@ -971,14 +971,14 @@ module_eval(<<'.,.,', 'parser.racc', 120)
 
 module_eval(<<'.,.,', 'parser.racc', 124)
   def _reduce_53(val, _values, result)
-     result = SQLParser::Statement::And.new(val[0], val[2]) 
+     result = SOQLParser::Statement::And.new(val[0], val[2]) 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.racc', 127)
   def _reduce_54(val, _values, result)
-     result = SQLParser::Statement::Not.new(val[1]) 
+     result = SOQLParser::Statement::Not.new(val[1]) 
     result
   end
 .,.,
@@ -1010,42 +1010,42 @@ module_eval(<<'.,.,', 'parser.racc', 135)
 
 module_eval(<<'.,.,', 'parser.racc', 146)
   def _reduce_65(val, _values, result)
-     result = SQLParser::Statement::Equals.new(val[0], val[2]) 
+     result = SOQLParser::Statement::Equals.new(val[0], val[2]) 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.racc', 147)
   def _reduce_66(val, _values, result)
-     result = SQLParser::Statement::Not.new(SQLParser::Statement::Equals.new(val[0], val[2])) 
+     result = SOQLParser::Statement::Not.new(SOQLParser::Statement::Equals.new(val[0], val[2])) 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.racc', 148)
   def _reduce_67(val, _values, result)
-     result = SQLParser::Statement::Less.new(val[0], val[2]) 
+     result = SOQLParser::Statement::Less.new(val[0], val[2]) 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.racc', 149)
   def _reduce_68(val, _values, result)
-     result = SQLParser::Statement::Greater.new(val[0], val[2]) 
+     result = SOQLParser::Statement::Greater.new(val[0], val[2]) 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.racc', 150)
   def _reduce_69(val, _values, result)
-     result = SQLParser::Statement::LessOrEquals.new(val[0], val[2]) 
+     result = SOQLParser::Statement::LessOrEquals.new(val[0], val[2]) 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.racc', 151)
   def _reduce_70(val, _values, result)
-     result = SQLParser::Statement::GreaterOrEquals.new(val[0], val[2]) 
+     result = SOQLParser::Statement::GreaterOrEquals.new(val[0], val[2]) 
     result
   end
 .,.,
@@ -1062,14 +1062,14 @@ module_eval(<<'.,.,', 'parser.racc', 151)
 
 module_eval(<<'.,.,', 'parser.racc', 165)
   def _reduce_76(val, _values, result)
-     result = SQLParser::Statement::Add.new(val[0], val[2]) 
+     result = SOQLParser::Statement::Add.new(val[0], val[2]) 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.racc', 166)
   def _reduce_77(val, _values, result)
-     result = SQLParser::Statement::Subtract.new(val[0], val[2]) 
+     result = SOQLParser::Statement::Subtract.new(val[0], val[2]) 
     result
   end
 .,.,
@@ -1078,14 +1078,14 @@ module_eval(<<'.,.,', 'parser.racc', 166)
 
 module_eval(<<'.,.,', 'parser.racc', 170)
   def _reduce_79(val, _values, result)
-     result = SQLParser::Statement::Multiply.new(val[0], val[2]) 
+     result = SOQLParser::Statement::Multiply.new(val[0], val[2]) 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.racc', 171)
   def _reduce_80(val, _values, result)
-     result = SQLParser::Statement::Divide.new(val[0], val[2]) 
+     result = SOQLParser::Statement::Divide.new(val[0], val[2]) 
     result
   end
 .,.,
@@ -1122,7 +1122,7 @@ module_eval(<<'.,.,', 'parser.racc', 182)
 
 module_eval(<<'.,.,', 'parser.racc', 192)
   def _reduce_91(val, _values, result)
-     result = SQLParser::Statement::QualifiedColumn.new(val[0], val[2]) 
+     result = SOQLParser::Statement::QualifiedColumn.new(val[0], val[2]) 
     result
   end
 .,.,
@@ -1133,49 +1133,49 @@ module_eval(<<'.,.,', 'parser.racc', 192)
 
 module_eval(<<'.,.,', 'parser.racc', 199)
   def _reduce_94(val, _values, result)
-     result = SQLParser::Statement::Count.new(val[2]) 
+     result = SOQLParser::Statement::Count.new(val[2]) 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.racc', 200)
   def _reduce_95(val, _values, result)
-     result = SQLParser::Statement::Count.new(nil) 
+     result = SOQLParser::Statement::Count.new(nil) 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.racc', 201)
   def _reduce_96(val, _values, result)
-     result = SQLParser::Statement::Average.new(val[2]) 
+     result = SOQLParser::Statement::Average.new(val[2]) 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.racc', 202)
   def _reduce_97(val, _values, result)
-     result = SQLParser::Statement::Maximum.new(val[2]) 
+     result = SOQLParser::Statement::Maximum.new(val[2]) 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.racc', 203)
   def _reduce_98(val, _values, result)
-     result = SQLParser::Statement::Minimum.new(val[2]) 
+     result = SOQLParser::Statement::Minimum.new(val[2]) 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.racc', 204)
   def _reduce_99(val, _values, result)
-     result = SQLParser::Statement::Sum.new(val[2]) 
+     result = SOQLParser::Statement::Sum.new(val[2]) 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.racc', 205)
   def _reduce_100(val, _values, result)
-     result = SQLParser::Statement::Function.new(val[0], val[2]) 
+     result = SOQLParser::Statement::Function.new(val[0], val[2]) 
     result
   end
 .,.,
@@ -1199,7 +1199,7 @@ module_eval(<<'.,.,', 'parser.racc', 219)
 
 module_eval(<<'.,.,', 'parser.racc', 223)
   def _reduce_107(val, _values, result)
-     result = SQLParser::Statement::OrderColumn.new(val[0], val[1], val[2]) 
+     result = SOQLParser::Statement::OrderColumn.new(val[0], val[1], val[2]) 
     result
   end
 .,.,
@@ -1208,7 +1208,7 @@ module_eval(<<'.,.,', 'parser.racc', 223)
 
 module_eval(<<'.,.,', 'parser.racc', 227)
   def _reduce_109(val, _values, result)
-     result = SQLParser::Statement::Integer.new(val[0]) 
+     result = SOQLParser::Statement::Integer.new(val[0]) 
     result
   end
 .,.,
@@ -1217,14 +1217,14 @@ module_eval(<<'.,.,', 'parser.racc', 227)
 
 module_eval(<<'.,.,', 'parser.racc', 231)
   def _reduce_111(val, _values, result)
-     result = SQLParser::Statement::Ascending.new 
+     result = SOQLParser::Statement::Ascending.new 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.racc', 232)
   def _reduce_112(val, _values, result)
-     result = SQLParser::Statement::Descending.new 
+     result = SOQLParser::Statement::Descending.new 
     result
   end
 .,.,
@@ -1233,14 +1233,14 @@ module_eval(<<'.,.,', 'parser.racc', 232)
 
 module_eval(<<'.,.,', 'parser.racc', 236)
   def _reduce_114(val, _values, result)
-     result = SQLParser::Statement::NullsFirst.new 
+     result = SOQLParser::Statement::NullsFirst.new 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.racc', 237)
   def _reduce_115(val, _values, result)
-     result = SQLParser::Statement::NullsLast.new 
+     result = SOQLParser::Statement::NullsLast.new 
     result
   end
 .,.,
@@ -1251,35 +1251,35 @@ module_eval(<<'.,.,', 'parser.racc', 237)
 
 module_eval(<<'.,.,', 'parser.racc', 245)
   def _reduce_118(val, _values, result)
-     result = SQLParser::Statement::Float.new("#{val[0]}.#{val[2]}".to_f) 
+     result = SOQLParser::Statement::Float.new("#{val[0]}.#{val[2]}".to_f) 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.racc', 246)
   def _reduce_119(val, _values, result)
-     result = SQLParser::Statement::Float.new(val[0]) 
+     result = SOQLParser::Statement::Float.new(val[0]) 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.racc', 247)
   def _reduce_120(val, _values, result)
-     result = SQLParser::Statement::Float.new("0.#{val[1]}".to_f) 
+     result = SOQLParser::Statement::Float.new("0.#{val[1]}".to_f) 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.racc', 248)
   def _reduce_121(val, _values, result)
-     result = SQLParser::Statement::Integer.new(val[0]) 
+     result = SOQLParser::Statement::Integer.new(val[0]) 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.racc', 251)
   def _reduce_122(val, _values, result)
-     result = SQLParser::Statement::ApproximateFloat.new(val[0], val[2]) 
+     result = SOQLParser::Statement::ApproximateFloat.new(val[0], val[2]) 
     result
   end
 .,.,
@@ -1290,35 +1290,35 @@ module_eval(<<'.,.,', 'parser.racc', 251)
 
 module_eval(<<'.,.,', 'parser.racc', 260)
   def _reduce_125(val, _values, result)
-     result = val[0].new(SQLParser::Statement::Integer.new(val[1])) 
+     result = val[0].new(SOQLParser::Statement::Integer.new(val[1])) 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.racc', 261)
   def _reduce_126(val, _values, result)
-     result = SQLParser::Statement::Integer.new(val[0]) 
+     result = SOQLParser::Statement::Integer.new(val[0]) 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.racc', 264)
   def _reduce_127(val, _values, result)
-     result = SQLParser::Statement::UnaryPlus 
+     result = SOQLParser::Statement::UnaryPlus 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.racc', 265)
   def _reduce_128(val, _values, result)
-     result = SQLParser::Statement::UnaryMinus 
+     result = SOQLParser::Statement::UnaryMinus 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.racc', 269)
   def _reduce_129(val, _values, result)
-     result = SQLParser::Statement::Column.new(val[0]) 
+     result = SOQLParser::Statement::Column.new(val[0]) 
     result
   end
 .,.,
@@ -1327,42 +1327,42 @@ module_eval(<<'.,.,', 'parser.racc', 269)
 
 module_eval(<<'.,.,', 'parser.racc', 274)
   def _reduce_131(val, _values, result)
-     result = SQLParser::Statement::DateTime.new(val[0]) 
+     result = SOQLParser::Statement::DateTime.new(val[0]) 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.racc', 275)
   def _reduce_132(val, _values, result)
-     result = SQLParser::Statement::Date.new(val[0]) 
+     result = SOQLParser::Statement::Date.new(val[0]) 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.racc', 276)
   def _reduce_133(val, _values, result)
-     result = SQLParser::Statement::DateLiteral.new(val[0]) 
+     result = SOQLParser::Statement::DateLiteral.new(val[0]) 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.racc', 277)
   def _reduce_134(val, _values, result)
-     result = SQLParser::Statement::DateLiteral.new(*val[0].split(':')) 
+     result = SOQLParser::Statement::DateLiteral.new(*val[0].split(':')) 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.racc', 280)
   def _reduce_135(val, _values, result)
-     result = SQLParser::Statement::String.new(val[1]) 
+     result = SOQLParser::Statement::String.new(val[1]) 
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'parser.racc', 281)
   def _reduce_136(val, _values, result)
-     result = SQLParser::Statement::String.new('') 
+     result = SOQLParser::Statement::String.new('') 
     result
   end
 .,.,
@@ -1372,4 +1372,4 @@ def _reduce_none(val, _values, result)
 end
 
   end   # class Parser
-  end   # module SQLParser
+  end   # module SOQLParser

@@ -3,7 +3,7 @@ require 'test_helper'
 class TestParser < Minitest::Test
 
   def test_case_insensitivity
-    assert_sql 'SELECT Id FROM User WHERE Id = 1', 'select Id from User where Id = 1'
+    assert_soql 'SELECT Id FROM User WHERE Id = 1', 'select Id from User where Id = 1'
   end
 
   def test_subquery_in_where_clause
@@ -50,10 +50,10 @@ class TestParser < Minitest::Test
   end
 
   def test_not
-    assert_sql 'SELECT Id FROM User WHERE Id <> 1', 'SELECT Id FROM User WHERE NOT Id = 1'
-    assert_sql 'SELECT Id FROM User WHERE Id NOT IN (1, 2, 3)', 'SELECT Id FROM User WHERE NOT Id IN (1, 2, 3)'
-    assert_sql 'SELECT Id FROM User WHERE Id NOT BETWEEN 1 AND 3', 'SELECT Id FROM User WHERE NOT Id BETWEEN 1 AND 3'
-    assert_sql "SELECT Id FROM User WHERE Name NOT LIKE 'A%'", "SELECT Id FROM User WHERE NOT Name LIKE 'A%'"
+    assert_soql 'SELECT Id FROM User WHERE Id <> 1', 'SELECT Id FROM User WHERE NOT Id = 1'
+    assert_soql 'SELECT Id FROM User WHERE Id NOT IN (1, 2, 3)', 'SELECT Id FROM User WHERE NOT Id IN (1, 2, 3)'
+    assert_soql 'SELECT Id FROM User WHERE Id NOT BETWEEN 1 AND 3', 'SELECT Id FROM User WHERE NOT Id BETWEEN 1 AND 3'
+    assert_soql "SELECT Id FROM User WHERE Name NOT LIKE 'A%'", "SELECT Id FROM User WHERE NOT Name LIKE 'A%'"
 
     # Shouldn't negate subqueries
     assert_understands 'SELECT Id FROM User WHERE NOT EXISTS (SELECT Id FROM User WHERE Id = 1)'
@@ -118,7 +118,7 @@ class TestParser < Minitest::Test
   end
 
   def test_not_equals
-    assert_sql 'SELECT Id FROM User WHERE Id <> 1', 'SELECT Id FROM User WHERE Id != 1'
+    assert_soql 'SELECT Id FROM User WHERE Id <> 1', 'SELECT Id FROM User WHERE Id != 1'
     assert_understands 'SELECT Id FROM User WHERE Id <> 1'
   end
 
@@ -128,8 +128,8 @@ class TestParser < Minitest::Test
 
   def test_where_clause
     assert_understands 'SELECT Id FROM User WHERE 1 = 1'
-    assert_sql "SELECT Id FROM User WHERE Name = 'Foo'", "SELECT Id FROM User WHERE Name='Foo'"
-    assert_sql "SELECT Id FROM Contact WHERE (Name LIKE 'A%' AND MailingState = 'California')", "SELECT Id FROM Contact WHERE Name LIKE 'A%' AND MailingState='California'"
+    assert_soql "SELECT Id FROM User WHERE Name = 'Foo'", "SELECT Id FROM User WHERE Name='Foo'"
+    assert_soql "SELECT Id FROM Contact WHERE (Name LIKE 'A%' AND MailingState = 'California')", "SELECT Id FROM Contact WHERE Name LIKE 'A%' AND MailingState='California'"
     assert_understands "SELECT Amount FROM Opportunity WHERE CALENDAR_YEAR(CreatedDate) = 2011"
     assert_understands "SELECT Name FROM Account WHERE CreatedDate > 2011-04-26T10:00:00-08:00"
   end
@@ -256,17 +256,17 @@ class TestParser < Minitest::Test
     assert_understands 'SELECT Name, Account.Name, toLabel(StageName), CloseDate, Amount, Fiscal, Id, RecordTypeId, CreatedDate, LastModifiedDate, SystemModstamp FROM Opportunity USING SCOPE mine WHERE Amount > 10000 ORDER BY StageName DESC NULLS LAST, Id ASC NULLS FIRST'
 
 	# Parentheses are added to where clause
-    assert_sql 'SELECT Name, toLabel(StageName) FROM Opportunity WHERE (IsClosed = false AND CloseDate = THIS_MONTH) ORDER BY Name ASC NULLS FIRST, Id ASC NULLS FIRST', 'SELECT Name, toLabel(StageName) FROM Opportunity WHERE IsClosed = false AND CloseDate = THIS_MONTH ORDER BY Name ASC NULLS FIRST, Id ASC NULLS FIRST'
+    assert_soql 'SELECT Name, toLabel(StageName) FROM Opportunity WHERE (IsClosed = false AND CloseDate = THIS_MONTH) ORDER BY Name ASC NULLS FIRST, Id ASC NULLS FIRST', 'SELECT Name, toLabel(StageName) FROM Opportunity WHERE IsClosed = false AND CloseDate = THIS_MONTH ORDER BY Name ASC NULLS FIRST, Id ASC NULLS FIRST'
 
   end
 
   private
 
-  def assert_sql(expected, given)
-    assert_equal expected, SQLParser::Parser.parse(given).to_sql
+  def assert_soql(expected, given)
+    assert_equal expected, SOQLParser::Parser.parse(given).to_soql
   end
 
-  def assert_understands(sql)
-    assert_sql(sql, sql)
+  def assert_understands(soql)
+    assert_soql(soql, soql)
   end
 end

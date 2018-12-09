@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby -wKU
-require File.dirname(__FILE__) + '/../lib/sql'
+require File.dirname(__FILE__) + '/../lib/soql'
 require 'readline'
 
-PARSER = SQLParser::Parser.new
+PARSER = SOQLParser::Parser.new
 EXIT_VERBS = [nil, 'exit', 'quit']
 
 def handle_exit(input)
@@ -12,15 +12,15 @@ def handle_exit(input)
   end
 end
 
-def eval_sql(expression)
-  puts "=> #{PARSER.scan_str(expression).to_sql}"
+def eval_soql(expression)
+  puts "=> #{PARSER.scan_str(expression).to_soql}"
 rescue Exception => e
   puts e.message
-  puts e.backtrace.reject { |l| l =~ /bin\/sql/ }
+  puts e.backtrace.reject { |l| l =~ /bin\/soql/ }
 end
 
 loop do
-  input = Readline.readline('sql> ', true)
+  input = Readline.readline('soql> ', true)
   handle_exit(input)
-  eval_sql(input)
+  eval_soql(input)
 end
