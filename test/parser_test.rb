@@ -80,7 +80,7 @@ class TestParser < Minitest::Test
   end
 
   def test_like
-    assert_understands "SELECT Id FROM User WHERE name LIKE 'Joe%'"
+    assert_understands "SELECT Name FROM Account WHERE Name LIKE 'A%'"
   end
 
   def test_not_in
@@ -128,6 +128,10 @@ class TestParser < Minitest::Test
 
   def test_where_clause
     assert_understands 'SELECT Id FROM User WHERE 1 = 1'
+    assert_sql "SELECT Id FROM User WHERE Name = 'Foo'", "SELECT Id FROM User WHERE Name='Foo'"
+    assert_sql "SELECT Id FROM Contact WHERE (Name LIKE 'A%' AND MailingState = 'California')", "SELECT Id FROM Contact WHERE Name LIKE 'A%' AND MailingState='California'"
+    assert_understands "SELECT Amount FROM Opportunity WHERE CALENDAR_YEAR(CreatedDate) = 2011"
+    assert_understands "SELECT Name FROM Account WHERE CreatedDate > 2011-04-26T10:00:00-08:00"
   end
 
   def test_sum

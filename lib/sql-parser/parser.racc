@@ -95,8 +95,8 @@ rule
     # FIXME: the SQL-92 grammar indicates these should be
     # character_value_expression nodes, but changing them causes reduce/reduce
     # conflicts.
-    : row_value_constructor NOT LIKE row_value_constructor { result = SQLParser::Statement::Not.new(SQLParser::Statement::Like.new(val[0], val[3])) }
-    | row_value_constructor LIKE row_value_constructor { result = SQLParser::Statement::Like.new(val[0], val[2]) }
+    : row_value_constructor NOT LIKE string_literal { result = SQLParser::Statement::Not.new(SQLParser::Statement::Like.new(val[0], val[3])) }
+    | row_value_constructor LIKE string_literal { result = SQLParser::Statement::Like.new(val[0], val[2]) }
 
   null_predicate
     : row_value_constructor IS NOT NULL { result = SQLParser::Statement::Not.new(SQLParser::Statement::Is.new(val[0], SQLParser::Statement::Null.new)) }
@@ -265,9 +265,12 @@ rule
 
 # literals
   general_literal
+    : string_literal
+    | datetime_literal
+
+  string_literal
     : quote character_string_literal quote { result = SQLParser::Statement::String.new(val[1]) }
     | quote quote { result = SQLParser::Statement::String.new('') }
-    | datetime_literal
 
   datetime_literal
     : date_literal

@@ -207,7 +207,7 @@ module SQLParser
     end
 
     def visit_Table(o)
-      o.names.map { |p| quote(p) }.join('.')
+      o.names.join('.')
     end
 
     def visit_QualifiedColumn(o)
@@ -215,7 +215,7 @@ module SQLParser
     end
 
     def visit_Column(o)
-      quote(o.name)
+      o.name
     end
 
     def visit_As(o)
@@ -293,11 +293,6 @@ module SQLParser
       yield
     ensure
       @negated = false
-    end
-
-    def quote(str)
-      str
-      # "`#{str}`"
     end
 
     def escape(str)

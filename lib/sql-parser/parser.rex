@@ -69,11 +69,11 @@ rule
 
             \'            { @state = :STRS;  [:quote, text] }
   :STRS     \'            { @state = nil;    [:quote, text] }
-  :STRS     .*(?=\')      {                  [:character_string_literal, text.gsub("''", "'")] }
+  :STRS     .*?(?=\')      {                  [:character_string_literal, text.gsub("''", "'")] }
 
             \"            { @state = :STRD;  [:quote, text] }
   :STRD     \"            { @state = nil;    [:quote, text] }
-  :STRD     .*(?=\")      {                  [:character_string_literal, text.gsub('""', '"')] }
+  :STRD     .*?(?=\")      {                  [:character_string_literal, text.gsub('""', '"')] }
 
             {UINT}        { [:unsigned_integer, text.to_i] }
 
