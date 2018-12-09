@@ -179,6 +179,10 @@ class TestParser < Minitest::Test
     assert_understands 'SELECT SUM(Amount) Total FROM Opportunity'
   end
 
+  def test_from_multiple
+    assert_understands "SELECT COUNT() FROM Contact c, c.Account a WHERE a.name = 'MyriadPubs'"
+  end
+
   def test_toLabel
     assert_understands 'SELECT toLabel(StageName) FROM Opportunity'
     assert_understands 'SELECT toLabel(Recordtype.Name) FROM Case'

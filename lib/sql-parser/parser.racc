@@ -29,12 +29,18 @@ rule
     | value_expression
 
   from_clause
-    : FROM table_reference { result = SQLParser::Statement::FromClause.new(val[1]) }
+    : FROM table_references { result = SQLParser::Statement::FromClause.new(val[1]) }
+
+  table_references
+    : table_references comma table_reference { result = Array(val[0]) + Array(val[2])}
+    | table_reference
 
   table_reference
     : table_name AS column_name { result = SQLParser::Statement::As.new(val[0], val[2]) }
     | table_name column_name { result = SQLParser::Statement::As.new(val[0], val[1]) }
     | table_name
+    | identifier period identifier AS column_name { result = SQLParser::Statement::As.new(SQLParser::Statement::Table.new(val[0], val[2]), val[4]) }
+    | identifier period identifier column_name { result = SQLParser::Statement::As.new(SQLParser::Statement::Table.new(val[0], val[2]), val[3]) }
     | identifier period identifier { result = SQLParser::Statement::Table.new(val[0], val[2]) }
 
   table_subquery
