@@ -10,13 +10,6 @@ module SQLParser
       node.accept(self)
     end
 
-    def visit_DirectSelect(o)
-      [
-        o.query_expression,
-        o.order_by
-      ].compact.collect { |e| visit(e) }.join(' ')
-    end
-
     def visit_OrderBy(o)
       "ORDER BY #{arrayize(o.sort_specification)}"
     end
@@ -51,7 +44,8 @@ module SQLParser
         o.where_clause,
         o.group_by_clause,
         o.having_clause,
-        o.limit_clause
+        o.order_by_clause,
+        o.limit_clause,
       ].compact.collect { |e| visit(e) }.join(' ')
     end
 

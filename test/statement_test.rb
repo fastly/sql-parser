@@ -1,10 +1,6 @@
 require 'test_helper'
 
 class TestStatement < Minitest::Test
-  def test_direct_select
-    assert_sql 'SELECT * FROM users ORDER BY name', SQLParser::Statement::DirectSelect.new(select(all, tblx(from(tbl('users')))), SQLParser::Statement::OrderBy.new(col('name')))
-  end
-
   def test_order_by
     assert_sql 'ORDER BY name', SQLParser::Statement::OrderBy.new(col('name'))
   end

@@ -1,18 +1,16 @@
 class SQLParser::Parser
 
 rule
-# dynamic sql
 
-  direct_sql_statement
-    : direct_sql_data_statement
-
-  direct_sql_data_statement
-    : direct_select_statement_multiple_rows
-
-  direct_select_statement_multiple_rows
-    : query_expression order_by_clause { result = SQLParser::Statement::DirectSelect.new(val[0], val[1]) }
+# Root rule
+  query_specification
+    : SELECT select_list table_expression { result = SQLParser::Statement::Select.new(val[1], val[2]) }
+    | SELECT select_list { result = SQLParser::Statement::Select.new(val[1]) }
 
 # module contents
+  table_expression
+    : from_clause using_scope_clause where_clause group_by_clause having_clause order_by_clause limit_clause { result = SQLParser::Statement::TableExpression.new(val[0], val[1], val[2], val[3], val[4], val[5], val[6]) }
+
   order_by_clause
     : # no action
     | ORDER BY sort_specification_list { result = SQLParser::Statement::OrderBy.new(val[2]) }
@@ -53,10 +51,6 @@ rule
     : value_expression comma in_column_list { result = Array(val[0]) + Array(val[2]) }
     | value_expression
 
-  query_specification
-    : SELECT select_list table_expression { result = SQLParser::Statement::Select.new(val[1], val[2]) }
-    | SELECT select_list { result = SQLParser::Statement::Select.new(val[1]) }
-
   select_list
     : asterisk { result = SQLParser::Statement::All.new }
     | select_sublist { result = SQLParser::Statement::SelectList.new(val[0]) }
@@ -68,9 +62,6 @@ rule
   derived_column
     : value_expression column_name { result = SQLParser::Statement::As.new(val[0], val[1]) }
     | value_expression
-
-  table_expression
-    : from_clause using_scope_clause where_clause group_by_clause having_clause limit_clause { result = SQLParser::Statement::TableExpression.new(val[0], val[1], val[2], val[3], val[4], val[5]) }
 
   from_clause
     : FROM table_reference { result = SQLParser::Statement::FromClause.new(val[1]) }
