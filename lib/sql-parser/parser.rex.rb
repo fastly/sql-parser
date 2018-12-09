@@ -179,8 +179,6 @@ class SQLParser::Parser < Racc::Parser
     BETWEEN
     AND
     NOT
-    INNER
-    INTO
     IN
     ORDER
     OR
@@ -197,13 +195,6 @@ class SQLParser::Parser < Racc::Parser
     BY
     HAVING
     LIMIT
-    CROSS
-    JOIN
-    ON
-    LEFT
-    OUTER
-    RIGHT
-    FULL
     USING
     EXISTS
     DESC

@@ -146,10 +146,6 @@ module SQLParser
       end
     end
 
-    def visit_InColumnList(o)
-      "(#{arrayize(o.columns)})"
-    end
-
     def visit_InValueList(o)
       "(#{arrayize(o.values)})"
     end
@@ -208,38 +204,6 @@ module SQLParser
 
     def visit_Function(o)
       "#{o.function}(#{visit(o.arguments)})"
-    end
-
-    def visit_CrossJoin(o)
-      "#{visit(o.left)} CROSS JOIN #{visit(o.right)}"
-    end
-
-    def visit_InnerJoin(o)
-      qualified_join('INNER', o)
-    end
-
-    def visit_LeftJoin(o)
-      qualified_join('LEFT', o)
-    end
-
-    def visit_LeftOuterJoin(o)
-      qualified_join('LEFT OUTER', o)
-    end
-
-    def visit_RightJoin(o)
-      qualified_join('RIGHT', o)
-    end
-
-    def visit_RightOuterJoin(o)
-      qualified_join('RIGHT OUTER', o)
-    end
-
-    def visit_FullJoin(o)
-      qualified_join('FULL', o)
-    end
-
-    def visit_FullOuterJoin(o)
-      qualified_join('FULL OUTER', o)
     end
 
     def visit_Table(o)
@@ -362,10 +326,6 @@ module SQLParser
 
     def aggregate(function_name, o)
       "#{function_name}(#{visit(o.column)})"
-    end
-
-    def qualified_join(join_type, o)
-      "#{visit(o.left)} #{join_type} JOIN #{visit(o.right)} #{visit(o.search_condition)}"
     end
 
   end

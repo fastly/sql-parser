@@ -35,40 +35,6 @@ class TestStatement < Minitest::Test
     assert_sql 'FROM users', from(tbl('users'))
   end
 
-  def test_full_outer_join
-    assert_sql 't1 FULL OUTER JOIN t2 ON t1.a = t2.a', SQLParser::Statement::FullOuterJoin.new(tbl('t1'), tbl('t2'), SQLParser::Statement::On.new(equals(qcol(tbl('t1'), col('a')), qcol(tbl('t2'), col('a')))))
-    assert_sql 't1 FULL OUTER JOIN t2 USING (a)', SQLParser::Statement::FullOuterJoin.new(tbl('t1'), tbl('t2'), SQLParser::Statement::Using.new(col('a')))
-  end
-
-  def test_full_join
-    assert_sql 't1 FULL JOIN t2 ON t1.a = t2.a', SQLParser::Statement::FullJoin.new(tbl('t1'), tbl('t2'), SQLParser::Statement::On.new(equals(qcol(tbl('t1'), col('a')), qcol(tbl('t2'), col('a')))))
-  end
-
-  def test_right_outer_join
-    assert_sql 't1 RIGHT OUTER JOIN t2 ON t1.a = t2.a', SQLParser::Statement::RightOuterJoin.new(tbl('t1'), tbl('t2'), SQLParser::Statement::On.new(equals(qcol(tbl('t1'), col('a')), qcol(tbl('t2'), col('a')))))
-  end
-
-  def test_right_join
-    assert_sql 't1 RIGHT JOIN t2 ON t1.a = t2.a', SQLParser::Statement::RightJoin.new(tbl('t1'), tbl('t2'), SQLParser::Statement::On.new(equals(qcol(tbl('t1'), col('a')), qcol(tbl('t2'), col('a')))))
-  end
-
-  def test_left_outer_join
-    assert_sql 't1 LEFT OUTER JOIN t2 ON t1.a = t2.a', SQLParser::Statement::LeftOuterJoin.new(tbl('t1'), tbl('t2'), SQLParser::Statement::On.new(equals(qcol(tbl('t1'), col('a')), qcol(tbl('t2'), col('a')))))
-  end
-
-  def test_left_join
-    assert_sql 't1 LEFT JOIN t2 ON t1.a = t2.a', SQLParser::Statement::LeftJoin.new(tbl('t1'), tbl('t2'), SQLParser::Statement::On.new(equals(qcol(tbl('t1'), col('a')), qcol(tbl('t2'), col('a')))))
-  end
-
-  def test_inner_join
-    assert_sql 't1 INNER JOIN t2 ON t1.a = t2.a', SQLParser::Statement::InnerJoin.new(tbl('t1'), tbl('t2'), SQLParser::Statement::On.new(equals(qcol(tbl('t1'), col('a')), qcol(tbl('t2'), col('a')))))
-  end
-
-  def test_cross_join
-    assert_sql 't1 CROSS JOIN t2', SQLParser::Statement::CrossJoin.new(tbl('t1'), tbl('t2'))
-    assert_sql 't1 CROSS JOIN t2 CROSS JOIN t3', SQLParser::Statement::CrossJoin.new(SQLParser::Statement::CrossJoin.new(tbl('t1'), tbl('t2')), tbl('t3'))
-  end
-
   def test_order_clause
     assert_sql 'ORDER BY name DESC', SQLParser::Statement::OrderClause.new(SQLParser::Statement::OrderColumn.new(col('name'), SQLParser::Statement::Descending.new))
     assert_sql 'ORDER BY id ASC, name DESC', SQLParser::Statement::OrderClause.new([SQLParser::Statement::OrderColumn.new(col('id'), SQLParser::Statement::Ascending.new), SQLParser::Statement::OrderColumn.new(col('name'), SQLParser::Statement::Descending.new)])

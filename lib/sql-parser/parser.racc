@@ -16,13 +16,6 @@ rule
   query_expression
     : query_specification
 
-  column_list
-    : left_paren in_column_list right_paren { result = SQLParser::Statement::InColumnList.new(val[1]) }
-
-  in_column_list
-    : value_expression comma in_column_list { result = Array(val[0]) + Array(val[2]) }
-    | value_expression
-
   select_list
     : select_sublist { result = SQLParser::Statement::SelectList.new(val[0]) }
 
@@ -42,44 +35,10 @@ rule
     : table_name AS column_name { result = SQLParser::Statement::As.new(val[0], val[2]) }
     | table_name column_name { result = SQLParser::Statement::As.new(val[0], val[1]) }
     | table_name
-    | joined_table
     | identifier period identifier { result = SQLParser::Statement::Table.new(val[0], val[2]) }
 
   table_subquery
     : subquery
-
-  joined_table
-    : cross_join
-    | qualified_join
-
-  cross_join
-    : table_reference comma table_name { result = SQLParser::Statement::CrossJoin.new(val[0], val[2]) }
-    | table_reference CROSS JOIN table_name { result = SQLParser::Statement::CrossJoin.new(val[0], val[3]) }
-
-  qualified_join
-    : table_reference join_type JOIN table_reference join_specification { result = val[1].new(val[0], val[3], val[4]) }
-
-  join_type
-    : INNER { result = SQLParser::Statement::InnerJoin }
-    | LEFT OUTER { result = SQLParser::Statement::LeftOuterJoin }
-    | LEFT { result = SQLParser::Statement::LeftJoin }
-    | RIGHT OUTER { result = SQLParser::Statement::RightOuterJoin }
-    | RIGHT { result = SQLParser::Statement::RightJoin }
-    | FULL { result = SQLParser::Statement::FullJoin }
-    | FULL OUTER { result = SQLParser::Statement::FullOuterJoin }
-
-  join_specification
-    : join_condition
-    | named_columns_join
-
-  join_condition
-    : ON search_condition { result = SQLParser::Statement::On.new(val[1]) }
-
-  named_columns_join
-    : USING left_paren join_column_list right_paren { result = SQLParser::Statement::Using.new(val[2]) }
-
-  join_column_list
-    : column_name_list
 
   using_scope_clause
     : # no action
@@ -149,10 +108,6 @@ rule
 # constraints
   table_name
     : identifier { result = SQLParser::Statement::Table.new(val[0]) }
-
-  column_name_list
-    : column_name_list comma column_name { result = Array(val[0]) + Array(val[2]) }
-    | column_name
 
 # search condition
   search_condition

@@ -14,8 +14,6 @@ inner
     BETWEEN
     AND
     NOT
-    INNER
-    INTO
     IN
     ORDER
     OR
@@ -32,13 +30,6 @@ inner
     BY
     HAVING
     LIMIT
-    CROSS
-    JOIN
-    ON
-    LEFT
-    OUTER
-    RIGHT
-    FULL
     USING
     EXISTS
     DESC

@@ -271,16 +271,6 @@ module SQLParser
 
     end
 
-    class InColumnList < Node
-
-      def initialize(columns)
-        @columns = columns
-      end
-
-      attr_accessor :columns
-
-    end
-
     class Between < Node
 
       def initialize(left, min, max)
@@ -343,53 +333,6 @@ module SQLParser
 
       attr_accessor :function
       attr_accessor :arguments
-    end
-
-    class JoinedTable < Node
-
-      def initialize(left, right)
-        @left = left
-        @right = right
-      end
-
-      attr_accessor :left
-      attr_accessor :right
-
-    end
-
-    class CrossJoin < JoinedTable
-    end
-
-    class QualifiedJoin < JoinedTable
-
-      def initialize(left, right, search_condition)
-        super(left, right)
-        @search_condition = search_condition
-      end
-
-      attr_accessor :search_condition
-
-    end
-
-    class InnerJoin < QualifiedJoin
-    end
-
-    class LeftJoin < QualifiedJoin
-    end
-
-    class LeftOuterJoin < QualifiedJoin
-    end
-
-    class RightJoin < QualifiedJoin
-    end
-
-    class RightOuterJoin < QualifiedJoin
-    end
-
-    class FullJoin < QualifiedJoin
-    end
-
-    class FullOuterJoin < QualifiedJoin
     end
 
     class QualifiedColumn < Node

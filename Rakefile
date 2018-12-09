@@ -24,4 +24,3 @@ task :parser => [GENERATED_LEXER, GENERATED_PARSER]
 # Make sure the parser's up-to-date when we test.
 Rake::Task['test'].prerequisites << :parser
 task :default => :test
-
