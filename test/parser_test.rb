@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class TestParser < Minitest::Test
-  
+
   def test_case_insensitivity
     assert_sql 'SELECT * FROM users WHERE id = 1', 'select * from users where id = 1'
   end
@@ -222,123 +222,14 @@ class TestParser < Minitest::Test
   end
 
   def test_select_list
-    assert_understands 'SELECT 1, 2'
-    assert_understands 'SELECT (1 + 1) x, (2 + 2) y'
-    assert_understands 'SELECT id, name'
-    assert_understands 'SELECT (age * 2) double_age, first_name name'
+    assert_understands 'SELECT Id FROM Opportunity'
+    assert_understands 'SELECT Id, Name, Amount FROM Opportunity'
   end
 
   def test_as
-    assert_understands 'SELECT 1 x'
-    assert_understands 'SELECT (1 + 1) y'
     assert_understands 'SELECT u.Id FROM User u'
-  end
-
-  def test_parentheses
-    assert_sql 'SELECT ((1 + 2) * ((3 - 4) / 5))', 'SELECT (1 + 2) * (3 - 4) / 5'
-  end
-
-  def test_order_of_operations
-    assert_sql 'SELECT (1 + ((2 * 3) - (4 / 5)))', 'SELECT 1 + 2 * 3 - 4 / 5'
-  end
-
-  def test_numeric_value_expression
-    assert_understands 'SELECT (1 * 2)'
-    assert_understands 'SELECT (1 / 2)'
-    assert_understands 'SELECT (1 + 2)'
-    assert_understands 'SELECT (1 - 2)'
-  end
-
-  def test_quoted_identifier
-    assert_sql 'SELECT a', 'SELECT a'
-  end
-
-  def test_date
-    assert_sql "SELECT DATE '2008-07-11'", 'SELECT DATE "2008-07-11"'
-    assert_understands "SELECT DATE '2008-07-11'"
-  end
-
-  def test_quoting
-    assert_sql %{SELECT ''}, %{SELECT ""}
-    assert_understands %{SELECT ''}
-
-    assert_sql %{SELECT 'Quote "this"'}, %{SELECT "Quote ""this"""}
-    assert_understands %{SELECT 'Quote ''this!'''}
-
-    # # FIXME
-    # assert_sql %{SELECT '"'}, %{SELECT """"}
-    # assert_understands %{SELECT ''''}
-  end
-
-  def test_string
-    assert_sql "SELECT 'abc'", 'SELECT "abc"'
-    assert_understands "SELECT 'abc'"
-  end
-
-  # def test_approximate_numeric_literal
-    # assert_understands 'SELECT 1E1'
-    # assert_understands 'SELECT 1E+1'
-    # assert_understands 'SELECT 1E-1'
-
-    # assert_understands 'SELECT +1E1'
-    # assert_understands 'SELECT +1E+1'
-    # assert_understands 'SELECT +1E-1'
-
-    # assert_understands 'SELECT -1E1'
-    # assert_understands 'SELECT -1E+1'
-    # assert_understands 'SELECT -1E-1'
-
-    # assert_understands 'SELECT 1.5E30'
-    # assert_understands 'SELECT 1.5E+30'
-    # assert_understands 'SELECT 1.5E-30'
-
-    # assert_understands 'SELECT +1.5E30'
-    # assert_understands 'SELECT +1.5E+30'
-    # assert_understands 'SELECT +1.5E-30'
-
-    # assert_understands 'SELECT -1.5E30'
-    # assert_understands 'SELECT -1.5E+30'
-    # assert_understands 'SELECT -1.5E-30'
-  # end
-
-  def test_signed_float
-    # Positives
-    assert_sql 'SELECT +1', 'SELECT +1.'
-    assert_sql 'SELECT +0.1', 'SELECT +.1'
-
-    assert_understands 'SELECT +0.1'
-    assert_understands 'SELECT +1.0'
-    assert_understands 'SELECT +1.1'
-    assert_understands 'SELECT +10.1'
-
-    # Negatives
-    assert_sql 'SELECT -1', 'SELECT -1.'
-    assert_sql 'SELECT -0.1', 'SELECT -.1'
-
-    assert_understands 'SELECT -0.1'
-    assert_understands 'SELECT -1.0'
-    assert_understands 'SELECT -1.1'
-    assert_understands 'SELECT -10.1'
-  end
-
-  def test_unsigned_float
-    assert_sql 'SELECT 1', 'SELECT 1.'
-    assert_sql 'SELECT 0.1', 'SELECT .1'
-
-    assert_understands 'SELECT 0.1'
-    assert_understands 'SELECT 1.0'
-    assert_understands 'SELECT 1.1'
-    assert_understands 'SELECT 10.1'
-  end
-
-  def test_signed_integer
-    assert_understands 'SELECT +1'
-    assert_understands 'SELECT -1'
-  end
-
-  def test_unsigned_integer
-    assert_understands 'SELECT 1'
-    assert_understands 'SELECT 10'
+    assert_understands 'SELECT Id OppId FROM Opportunity'
+    assert_understands 'SELECT Id, Name OppName FROM Opportunity'
   end
 
   # SOQL
@@ -348,8 +239,8 @@ class TestParser < Minitest::Test
   end
 
   def test_toLabel
-    assert_understands 'SELECT toLabel(StageName)'
-    assert_understands 'SELECT toLabel(Recordtype.Name)'
+    assert_understands 'SELECT toLabel(StageName) FROM Opportunity'
+    assert_understands 'SELECT toLabel(Recordtype.Name) FROM Case'
   end
 
   def test_using_scope

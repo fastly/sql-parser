@@ -11,7 +11,7 @@ class TestStatement < Minitest::Test
 
   def test_select
     assert_sql 'SELECT 1', select(int(1))
-    assert_sql 'SELECT * FROM users', select(all, tblx(from(tbl('users'))))
+    assert_sql 'SELECT * FROM users', query(select(all), from(tbl('users')))
   end
 
   def test_select_list
@@ -27,12 +27,12 @@ class TestStatement < Minitest::Test
     assert_sql '*', all
   end
 
-  def test_table_expression
-    assert_sql 'FROM users WHERE id = 1 GROUP BY name', tblx(from(tbl('users')), where(equals(col('id'), int(1))), group_by(col('name')))
+  def test_query
+    assert_sql 'SELECT * FROM users WHERE id = 1 GROUP BY name', query(select(all), from(tbl('users')), where(equals(col('id'), int(1))), group_by(col('name')))
   end
 
   def test_limit
-    assert_sql 'FROM users LIMIT 2', tblx(from(tbl('users')), limit(int(2)))
+    assert_sql 'SELECT * FROM users LIMIT 2', query(select(all), from(tbl('users')), limit(int(2)))
   end
 
   def test_from_clause
@@ -260,6 +260,10 @@ class TestStatement < Minitest::Test
     assert_equal expected, ast.to_sql
   end
 
+  def query(select_clause, from_clause, using_scope_clause = nil, where_clause = nil, group_by_clause = nil, having_clause = nil)
+    SQLParser::Statement::Query.new(select_clause, from_clause, using_scope_clause, where_clause, group_by_clause, having_clause)
+  end
+
   def qcol(table, column)
     SQLParser::Statement::QualifiedColumn.new(table, column)
   end
@@ -296,12 +300,8 @@ class TestStatement < Minitest::Test
     SQLParser::Statement::SelectList.new(ary)
   end
 
-  def select(list, table_expression = nil)
-    SQLParser::Statement::Select.new(list, table_expression)
-  end
-
-  def tblx(from_clause, using_scope_clause = nil, where_clause = nil, group_by_clause = nil, having_clause = nil)
-    SQLParser::Statement::TableExpression.new(from_clause, using_scope_clause, where_clause, group_by_clause, having_clause)
+  def select(list)
+    SQLParser::Statement::Select.new(list)
   end
 
   def from(tables)

@@ -25,6 +25,28 @@ module SQLParser
       def demodulize(str)
         str.split('::')[-1]
       end
+    end
+
+    class Query < Node
+      def initialize(select_clause, from_clause, using_scope_clause = nil, where_clause = nil, group_by_clause = nil, having_clause = nil, order_by_clause = nil, limit_clause = nil)
+        @select_clause = select_clause
+        @from_clause = from_clause
+        @using_scope_clause = using_scope_clause
+        @where_clause = where_clause
+        @group_by_clause = group_by_clause
+        @having_clause = having_clause
+        @order_by_clause = order_by_clause
+        @limit_clause = limit_clause
+      end
+
+      attr_accessor :select_clause
+      attr_accessor :from_clause
+      attr_accessor :using_scope_clause
+      attr_accessor :where_clause
+      attr_accessor :group_by_clause
+      attr_accessor :having_clause
+      attr_accessor :order_by_clause
+      attr_accessor :limit_clause
 
     end
 
@@ -49,14 +71,11 @@ module SQLParser
     end
 
     class Select < Node
-      def initialize(list, table_expression = nil)
+      def initialize(list)
         @list = list
-        @table_expression = table_expression
       end
 
       attr_accessor :list
-      attr_accessor :table_expression
-
     end
 
     class SelectList < Node
@@ -80,28 +99,6 @@ module SQLParser
     end
 
     class All < Node
-    end
-
-    class TableExpression < Node
-
-      def initialize(from_clause, using_scope_clause = nil, where_clause = nil, group_by_clause = nil, having_clause = nil, order_by_clause = nil, limit_clause = nil)
-        @from_clause = from_clause
-        @using_scope_clause = using_scope_clause
-        @where_clause = where_clause
-        @group_by_clause = group_by_clause
-        @having_clause = having_clause
-        @order_by_clause = order_by_clause
-        @limit_clause = limit_clause
-      end
-
-      attr_accessor :from_clause
-      attr_accessor :using_scope_clause
-      attr_accessor :where_clause
-      attr_accessor :group_by_clause
-      attr_accessor :having_clause
-      attr_accessor :order_by_clause
-      attr_accessor :limit_clause
-
     end
 
     class FromClause < Node

@@ -22,7 +22,7 @@ module SQLParser
       # FIXME: This feels like a hack
       initialize
 
-      "SELECT #{visit_all([o.list, o.table_expression].compact).join(' ')}"
+      "SELECT #{visit(o.list)}"
     end
 
     def visit_SelectList(o)
@@ -37,8 +37,9 @@ module SQLParser
       '*'
     end
 
-    def visit_TableExpression(o)
+    def visit_Query(o)
       [
+        o.select_clause,
         o.from_clause,
         o.using_scope_clause,
         o.where_clause,

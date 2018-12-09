@@ -2,39 +2,11 @@ class SQLParser::Parser
 
 rule
 
-# Root rule
   query_specification
-    : SELECT select_list table_expression { result = SQLParser::Statement::Select.new(val[1], val[2]) }
-    | SELECT select_list { result = SQLParser::Statement::Select.new(val[1]) }
+    : select_clause from_clause using_scope_clause where_clause group_by_clause having_clause order_by_clause limit_clause { result = SQLParser::Statement::Query.new(val[0], val[1], val[2], val[3], val[4], val[5], val[6], val[7]) }
 
-# module contents
-  table_expression
-    : from_clause using_scope_clause where_clause group_by_clause having_clause order_by_clause limit_clause { result = SQLParser::Statement::TableExpression.new(val[0], val[1], val[2], val[3], val[4], val[5], val[6]) }
-
-  order_by_clause
-    : # no action
-    | ORDER BY sort_specification_list { result = SQLParser::Statement::OrderBy.new(val[2]) }
-
-  sort_specification_list
-    : sort_specification_list comma sort_specification { result = Array(val[0]) + Array(val[2]) }
-    | sort_specification
-
-  sort_specification
-    : sort_key ordering_specification nulls_ordering_specification { result = SQLParser::Statement::OrderColumn.new(val[0], val[1], val[2]) }
-
-  sort_key
-    : column_name
-    | unsigned_integer { result = SQLParser::Statement::Integer.new(val[0]) }
-
-  ordering_specification
-    : # no action
-    | ASC { result = SQLParser::Statement::Ascending.new }
-    | DESC { result = SQLParser::Statement::Descending.new }
-
-  nulls_ordering_specification
-    : # no action
-    | NULLS FIRST { result = SQLParser::Statement::NullsFirst.new }
-    | NULLS LAST { result = SQLParser::Statement::NullsLast.new }
+  select_clause
+    : SELECT select_list { result = SQLParser::Statement::Select.new(val[1]) }
 
 # queries
   subquery
@@ -51,6 +23,7 @@ rule
     : value_expression comma in_column_list { result = Array(val[0]) + Array(val[2]) }
     | value_expression
 
+  # TODO: remove asterisk and SQLParser::Statement::All
   select_list
     : asterisk { result = SQLParser::Statement::All.new }
     | select_sublist { result = SQLParser::Statement::SelectList.new(val[0]) }
@@ -59,6 +32,7 @@ rule
     : derived_column comma select_sublist { result = Array(val[0]) + Array(val[2]) }
     | derived_column
 
+  # TODO: Only fields, aggregate functions and subqueries in SELECT  
   derived_column
     : value_expression column_name { result = SQLParser::Statement::As.new(val[0], val[1]) }
     | value_expression
@@ -131,6 +105,10 @@ rule
   having_clause
     : # no action
     | HAVING search_condition { result = SQLParser::Statement::HavingClause.new(val[1]) }
+
+  order_by_clause
+    : # no action
+    | ORDER BY sort_specification_list { result = SQLParser::Statement::OrderBy.new(val[2]) }
 
   limit_clause
     : # no action
@@ -280,6 +258,28 @@ rule
 
   func_arg_expr
     : value_expression
+
+# ordering
+  sort_specification_list
+    : sort_specification_list comma sort_specification { result = Array(val[0]) + Array(val[2]) }
+    | sort_specification
+
+  sort_specification
+    : sort_key ordering_specification nulls_ordering_specification { result = SQLParser::Statement::OrderColumn.new(val[0], val[1], val[2]) }
+
+  sort_key
+    : column_name
+    | unsigned_integer { result = SQLParser::Statement::Integer.new(val[0]) }
+
+  ordering_specification
+    : # no action
+    | ASC { result = SQLParser::Statement::Ascending.new }
+    | DESC { result = SQLParser::Statement::Descending.new }
+
+  nulls_ordering_specification
+    : # no action
+    | NULLS FIRST { result = SQLParser::Statement::NullsFirst.new }
+    | NULLS LAST { result = SQLParser::Statement::NullsLast.new }
 
 # literal numbers, strings, dates and times
   unsigned_numeric_literal
