@@ -266,17 +266,12 @@ rule
 # literals
   general_literal
     : string_literal
-    | datetime_literal
+    | datetime_literal { result = SQLParser::Statement::DateTime.new(val[0]) }
+    | date_literal { result = SQLParser::Statement::Date.new(val[0]) }
 
   string_literal
     : quote character_string_literal quote { result = SQLParser::Statement::String.new(val[1]) }
     | quote quote { result = SQLParser::Statement::String.new('') }
-
-  datetime_literal
-    : date_literal
-
-  date_literal
-    : DATE date_string { result = SQLParser::Statement::Date.new(val[1]) }
 
 ---- header ----
 require File.dirname(__FILE__) + '/parser.rex.rb'

@@ -57,11 +57,11 @@ class SQLParser::Parser < Racc::Parser
     token = case @state
     when nil
       case
-      when (text = @ss.scan(/\"[0-9]+-[0-9]+-[0-9]+\"/i))
-         action { [:date_string, Date.parse(text)] }
+      when (text = @ss.scan(/[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}([-+][0-9]{2}:[0-9]{2}|Z)/i))
+         action {                  [:datetime_literal, text] }
 
-      when (text = @ss.scan(/\'[0-9]+-[0-9]+-[0-9]+\'/i))
-         action { [:date_string, Date.parse(text)] }
+      when (text = @ss.scan(/[0-9]{4}-[0-9]{2}-[0-9]{2}/i))
+         action {                  [:date_literal, text] }
 
       when (text = @ss.scan(/\'/i))
          action { @state = :STRS;  [:quote, text] }
@@ -171,7 +171,6 @@ class SQLParser::Parser < Racc::Parser
 
   KEYWORDS = %w(
     SELECT
-    DATE
     ASC
     AS
     FROM
@@ -196,12 +195,14 @@ class SQLParser::Parser < Racc::Parser
     HAVING
     LIMIT
     USING
-    EXISTS
+    EXISTS # TODO: remove
     DESC
     SCOPE
     FIRST
     LAST
     WITH
+    EXCLUDES
+    INCLUDES
   )
   def tokenize_ident(text)
     if KEYWORDS.include?(text.upcase)

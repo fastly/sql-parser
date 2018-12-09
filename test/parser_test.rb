@@ -197,6 +197,46 @@ class TestParser < Minitest::Test
     assert_understands 'SELECT Id FROM Opportunity ORDER BY StageName DESC NULLS LAST, Id ASC NULLS FIRST'
   end
 
+  def test_dates
+    assert_understands 'SELECT Id FROM Account WHERE CreatedDate = YESTERDAY'
+    assert_understands 'SELECT Id FROM Account WHERE CreatedDate > TODAY'
+    assert_understands 'SELECT Id FROM Opportunity WHERE CloseDate = TOMORROW'
+    assert_understands 'SELECT Id FROM Account WHERE CreatedDate > LAST_WEEK'
+    assert_understands 'SELECT Id FROM Account WHERE CreatedDate < THIS_WEEK'
+    assert_understands 'SELECT Id FROM Opportunity WHERE CloseDate = NEXT_WEEK'
+    assert_understands 'SELECT Id FROM Opportunity WHERE CloseDate > LAST_MONTH'
+    assert_understands 'SELECT Id FROM Account WHERE CreatedDate < THIS_MONTH'
+    assert_understands 'SELECT Id FROM Opportunity WHERE CloseDate = NEXT_MONTH'
+    assert_understands 'SELECT Id FROM Account WHERE CreatedDate = LAST_90_DAYS'
+    assert_understands 'SELECT Id FROM Opportunity WHERE CloseDate > NEXT_90_DAYS'
+    assert_understands 'SELECT Id FROM Account WHERE CreatedDate = LAST_N_DAYS:365'
+    assert_understands 'SELECT Id FROM Opportunity WHERE CloseDate > NEXT_N_DAYS:15'
+    assert_understands 'SELECT Id FROM Opportunity WHERE CloseDate > NEXT_N_WEEKS:4'
+    assert_understands 'SELECT Id FROM Account WHERE CreatedDate = LAST_N_WEEKS:52'
+    assert_understands 'SELECT Id FROM Opportunity WHERE CloseDate > NEXT_N_MONTHS:2'
+    assert_understands 'SELECT Id FROM Account WHERE CreatedDate = LAST_N_MONTHS:12'
+    assert_understands 'SELECT Id FROM Account WHERE CreatedDate = THIS_QUARTER'
+    assert_understands 'SELECT Id FROM Account WHERE CreatedDate > LAST_QUARTER'
+    assert_understands 'SELECT Id FROM Account WHERE CreatedDate < NEXT_QUARTER'
+    assert_understands 'SELECT Id FROM Account WHERE CreatedDate < NEXT_N_QUARTERS:2'
+    assert_understands 'SELECT Id FROM Account WHERE CreatedDate > LAST_N_QUARTERS:2'
+    assert_understands 'SELECT Id FROM Opportunity WHERE CloseDate = THIS_YEAR'
+    assert_understands 'SELECT Id FROM Opportunity WHERE CloseDate > LAST_YEAR'
+    assert_understands 'SELECT Id FROM Opportunity WHERE CloseDate < NEXT_YEAR'
+    assert_understands 'SELECT Id FROM Opportunity WHERE CloseDate < NEXT_N_YEARS:5'
+    assert_understands 'SELECT Id FROM Opportunity WHERE CloseDate > LAST_N_YEARS:5'
+    assert_understands 'SELECT Id FROM Account WHERE CreatedDate = THIS_FISCAL_QUARTER'
+    assert_understands 'SELECT Id FROM Account WHERE CreatedDate > LAST_FISCAL_QUARTER'
+    assert_understands 'SELECT Id FROM Account WHERE CreatedDate < NEXT_FISCAL_QUARTER'
+    assert_understands 'SELECT Id FROM Account WHERE CreatedDate < NEXT_N_FISCAL_QUARTERS:6'
+    assert_understands 'SELECT Id FROM Account WHERE CreatedDate > LAST_N_FISCAL_QUARTERS:6'
+    assert_understands 'SELECT Id FROM Opportunity WHERE CloseDate = THIS_FISCAL_YEAR'
+    assert_understands 'SELECT Id FROM Opportunity WHERE CloseDate > LAST_FISCAL_YEAR'
+    assert_understands 'SELECT Id FROM Opportunity WHERE CloseDate < NEXT_FISCAL_YEAR'
+    assert_understands 'SELECT Id FROM Opportunity WHERE CloseDate < NEXT_N_FISCAL_YEARS:3'
+    assert_understands 'SELECT Id FROM Opportunity WHERE CloseDate > LAST_N_FISCAL_YEARS:3'
+  end
+
   # TODO
   # def test_with_filters
   #   assert_understands "SELECT Id FROM UserProfileFeed WITH UserId='005D0000001AamR' ORDER BY CreatedDate DESC, Id DESC LIMIT 20"

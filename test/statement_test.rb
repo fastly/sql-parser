@@ -190,11 +190,13 @@ class TestStatement < Minitest::Test
   end
 
   def test_datetime
-    assert_sql "'2008-07-01 12:34:56'", SQLParser::Statement::DateTime.new(Time.local(2008, 7, 1, 12, 34, 56))
+    assert_sql "2008-07-01T12:34:56Z", SQLParser::Statement::DateTime.new("2008-07-01T12:34:56Z")
+    assert_sql "2008-07-01T12:34:56+07:00", SQLParser::Statement::DateTime.new("2008-07-01T12:34:56+07:00")
+    assert_sql "2008-07-01T12:34:56-07:00", SQLParser::Statement::DateTime.new("2008-07-01T12:34:56-07:00")
   end
 
   def test_date
-    assert_sql "DATE '2008-07-01'", SQLParser::Statement::Date.new(Date.new(2008, 7, 1))
+    assert_sql "2008-07-01", SQLParser::Statement::Date.new("2008-07-01")
   end
 
   def test_string

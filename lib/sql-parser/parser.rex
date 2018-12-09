@@ -6,7 +6,6 @@ option
 inner
   KEYWORDS = %w(
     SELECT
-    DATE
     ASC
     AS
     FROM
@@ -31,12 +30,14 @@ inner
     HAVING
     LIMIT
     USING
-    EXISTS
+    EXISTS # TODO: remove
     DESC
     SCOPE
     FIRST
     LAST
     WITH
+    EXCLUDES
+    INCLUDES
   )
 
   def tokenize_ident(text)
@@ -53,10 +54,16 @@ macro
   UINT    {DIGIT}+
   BLANK   \s+
 
-  YEARS   {UINT}
-  MONTHS  {UINT}
-  DAYS    {UINT}
+  YEARS   {DIGIT}{4}
+  MONTHS  {DIGIT}{2}
+  DAYS    {DIGIT}{2}
   DATE    {YEARS}-{MONTHS}-{DAYS}
+
+  HOURS     {DIGIT}{2}
+  MINUTES   {DIGIT}{2}
+  SECONDS   {DIGIT}{2}
+  OFFSET    ([-+]{DIGIT}{2}:{DIGIT}{2}|Z)
+  DATETIME  {DATE}T{HOURS}:{MINUTES}:{SECONDS}{OFFSET}
 
   IDENT   [a-zA-Z_][a-zA-Z0-9_]*
 
@@ -64,16 +71,16 @@ rule
 # [:state]  pattern       [actions]
 
 # literals
-            \"{DATE}\"    { [:date_string, Date.parse(text)] }
-            \'{DATE}\'    { [:date_string, Date.parse(text)] }
+            {DATETIME}    {                  [:datetime_literal, text] }
+            {DATE}        {                  [:date_literal, text] }
 
             \'            { @state = :STRS;  [:quote, text] }
   :STRS     \'            { @state = nil;    [:quote, text] }
-  :STRS     .*?(?=\')      {                  [:character_string_literal, text.gsub("''", "'")] }
+  :STRS     .*?(?=\')     {                  [:character_string_literal, text.gsub("''", "'")] }
 
             \"            { @state = :STRD;  [:quote, text] }
   :STRD     \"            { @state = nil;    [:quote, text] }
-  :STRD     .*?(?=\")      {                  [:character_string_literal, text.gsub('""', '"')] }
+  :STRD     .*?(?=\")     {                  [:character_string_literal, text.gsub('""', '"')] }
 
             {UINT}        { [:unsigned_integer, text.to_i] }
 
