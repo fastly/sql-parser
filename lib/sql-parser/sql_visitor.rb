@@ -270,6 +270,14 @@ module SQLParser
       o.value
     end
 
+    def visit_DateLiteral(o)
+      if o.arg
+        "#{o.literal}:#{o.arg}"
+      else
+        o.literal
+      end
+    end
+
     def visit_String(o)
       "'%s'" % escape(o.value)
     end

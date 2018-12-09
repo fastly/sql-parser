@@ -448,6 +448,16 @@ module SQLParser
     class Date < Literal
     end
 
+    class DateLiteral < Node
+      def initialize(literal, arg = nil)
+        @literal = literal
+        @arg = arg
+      end
+
+      attr_accessor :literal
+      attr_accessor :arg
+    end
+
     class String < Literal
     end
 

@@ -266,8 +266,10 @@ rule
 # literals
   general_literal
     : string_literal
-    | datetime_literal { result = SQLParser::Statement::DateTime.new(val[0]) }
-    | date_literal { result = SQLParser::Statement::Date.new(val[0]) }
+    | datetime { result = SQLParser::Statement::DateTime.new(val[0]) }
+    | date { result = SQLParser::Statement::Date.new(val[0]) }
+    | date_literal { result = SQLParser::Statement::DateLiteral.new(val[0]) }
+    | date_literal_with_arg { result = SQLParser::Statement::DateLiteral.new(*val[0].split(':')) }
 
   string_literal
     : quote character_string_literal quote { result = SQLParser::Statement::String.new(val[1]) }

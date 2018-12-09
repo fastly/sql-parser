@@ -58,10 +58,10 @@ class SQLParser::Parser < Racc::Parser
     when nil
       case
       when (text = @ss.scan(/[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}([-+][0-9]{2}:[0-9]{2}|Z)/i))
-         action {                  [:datetime_literal, text] }
+         action {                  [:datetime, text] }
 
       when (text = @ss.scan(/[0-9]{4}-[0-9]{2}-[0-9]{2}/i))
-         action {                  [:date_literal, text] }
+         action {                  [:date, text] }
 
       when (text = @ss.scan(/\'/i))
          action { @state = :STRS;  [:quote, text] }
@@ -120,8 +120,8 @@ class SQLParser::Parser < Racc::Parser
       when (text = @ss.scan(/,/i))
          action { [:comma, text] }
 
-      when (text = @ss.scan(/`[a-zA-Z_][a-zA-Z0-9_]*`/i))
-         action { [:identifier, text[1..-2]] }
+      when (text = @ss.scan(/[a-zA-Z_][a-zA-Z0-9_]*:\d+/i))
+         action { [:date_literal_with_arg, text] }
 
       when (text = @ss.scan(/[a-zA-Z_][a-zA-Z0-9_]*/i))
          action { tokenize_ident(text) }
@@ -204,9 +204,52 @@ class SQLParser::Parser < Racc::Parser
     EXCLUDES
     INCLUDES
   )
+  DATE_LITERALS_WITHOUT_ARGUMENT = %w(
+    YESTERDAY
+    TODAY
+    TOMORROW
+    LAST_WEEK
+    THIS_WEEK
+    NEXT_WEEK
+    LAST_MONTH
+    THIS_MONTH
+    NEXT_MONTH
+    LAST_90_DAYS
+    NEXT_90_DAYS
+    THIS_QUARTER
+    LAST_QUARTER
+    NEXT_QUARTER
+    THIS_YEAR
+    LAST_YEAR
+    NEXT_YEAR
+    THIS_FISCAL_QUARTER
+    LAST_FISCAL_QUARTER
+    NEXT_FISCAL_QUARTER
+    THIS_FISCAL_YEAR
+    LAST_FISCAL_YEAR
+    NEXT_FISCAL_YEAR
+  )
+  DATE_LITERALS_WITH_ARGUMENT = %w(
+    LAST_N_DAYS
+    NEXT_N_DAYS
+    NEXT_N_WEEKS
+    LAST_N_WEEKS
+    NEXT_N_MONTHS
+    LAST_N_MONTHS
+    NEXT_N_QUARTERS
+    LAST_N_QUARTERS
+    NEXT_N_YEARS
+    LAST_N_YEARS
+    NEXT_N_FISCAL_QUARTERS
+    LAST_N_FISCAL_QUARTERS
+    NEXT_N_FISCAL_YEARS
+    LAST_N_FISCAL_YEARS
+  )
   def tokenize_ident(text)
     if KEYWORDS.include?(text.upcase)
       [:"#{text.upcase}", text]
+    elsif DATE_LITERALS_WITHOUT_ARGUMENT.include?(text.upcase)
+      [:date_literal, text]
     else
       [:identifier, text]
     end
