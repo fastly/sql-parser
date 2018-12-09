@@ -47,6 +47,7 @@ inner
     SCOPE
     FIRST
     LAST
+    WITH
   )
 
   def tokenize_ident(text)

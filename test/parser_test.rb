@@ -236,22 +236,15 @@ class TestParser < Minitest::Test
 
   def test_select_list
     assert_understands 'SELECT 1, 2'
-    assert_understands 'SELECT (1 + 1) AS x, (2 + 2) AS y'
+    assert_understands 'SELECT (1 + 1) x, (2 + 2) y'
     assert_understands 'SELECT id, name'
-    assert_understands 'SELECT (age * 2) AS double_age, first_name AS name'
+    assert_understands 'SELECT (age * 2) double_age, first_name name'
   end
 
   def test_as
-    assert_understands 'SELECT 1 AS x'
-    assert_sql 'SELECT 1 AS x', 'SELECT 1 x'
-
-    assert_understands 'SELECT (1 + 1) AS y'
-    assert_sql 'SELECT (1 + 1) AS y', 'SELECT (1 + 1) y'
-
-    assert_understands 'SELECT * FROM users AS u'
-    assert_sql 'SELECT * FROM users AS u', 'SELECT * FROM users u'
-
-    assert_sql 'SELECT foo, 0 AS entry_count FROM other_db.users',  'SELECT foo, 0 AS entry_count FROM other_db.users'
+    assert_understands 'SELECT 1 x'
+    assert_understands 'SELECT (1 + 1) y'
+    assert_understands 'SELECT u.Id FROM User u'
   end
 
   def test_parentheses
@@ -363,6 +356,10 @@ class TestParser < Minitest::Test
 
   # SOQL
 
+  def test_select_alias
+    assert_understands 'SELECT SUM(Amount) Total FROM Opportunity'
+  end
+
   def test_toLabel
     assert_understands 'SELECT toLabel(StageName)'
     assert_understands 'SELECT toLabel(Recordtype.Name)'
@@ -381,9 +378,20 @@ class TestParser < Minitest::Test
     assert_understands 'SELECT Id FROM Opportunity ORDER BY StageName DESC NULLS LAST, Id ASC NULLS FIRST'
   end
 
-  def test_soql_query
+  # TODO
+  # def test_with_filters
+  #   assert_understands "SELECT Id FROM UserProfileFeed WITH UserId='005D0000001AamR' ORDER BY CreatedDate DESC, Id DESC LIMIT 20"
+  # end
+  #
+  # def test_with_data_category_filters
+  #   assert_understands "SELECT Title FROM KnowledgeArticleVersion WHERE PublishStatus='online' WITH DATA CATEGORY Geography__c ABOVE usa__c"
+  #   assert_understands "SELECT Title FROM Question WHERE LastReplyDate > 2005-10-08T01:02:03Z WITH DATA CATEGORY Geography__c AT (usa__c, uk__c)"
+  #   assert_understands "SELECT UrlName FROM KnowledgeArticleVersion WHERE PublishStatus='draft' WITH DATA CATEGORY Geography__c AT usa__c AND Product__c ABOVE_OR_BELOW mobile_phones__c"
+  # end
+
+  def test_soql_queries
     assert_understands 'SELECT Name, Account.Name, toLabel(StageName), CloseDate, Amount, Fiscal, Id, RecordTypeId, CreatedDate, LastModifiedDate, SystemModstamp FROM Opportunity USING SCOPE mine WHERE Amount > 10000 ORDER BY StageName DESC NULLS LAST, Id ASC NULLS FIRST'
-    
+
 	# Parentheses are added to where clause
     assert_sql 'SELECT Name, toLabel(StageName) FROM Opportunity WHERE (IsClosed = false AND CloseDate = THIS_MONTH) ORDER BY Name ASC NULLS FIRST, Id ASC NULLS FIRST', 'SELECT Name, toLabel(StageName) FROM Opportunity WHERE IsClosed = false AND CloseDate = THIS_MONTH ORDER BY Name ASC NULLS FIRST, Id ASC NULLS FIRST'
 

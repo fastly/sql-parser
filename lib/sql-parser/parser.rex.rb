@@ -212,6 +212,7 @@ class SQLParser::Parser < Racc::Parser
     SCOPE
     FIRST
     LAST
+    WITH
   )
   def tokenize_ident(text)
     if KEYWORDS.include?(text.upcase)

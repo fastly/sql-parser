@@ -192,7 +192,7 @@ class TestStatement < Minitest::Test
   end
 
   def test_as
-    assert_sql '1 AS a', SQLParser::Statement::As.new(int(1), col('a'))
+    assert_sql '1 a', SQLParser::Statement::As.new(int(1), col('a'))
   end
 
   def test_multiply

@@ -271,7 +271,7 @@ module SQLParser
     end
 
     def visit_As(o)
-      "#{visit(o.value)} AS #{visit(o.column)}"
+      "#{visit(o.value)} #{visit(o.column)}"
     end
 
     def visit_Multiply(o)
