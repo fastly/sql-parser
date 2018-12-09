@@ -3,6 +3,61 @@ class SQLParser::Parser
 option
   ignorecase
 
+inner
+  KEYWORDS = %w(
+    SELECT
+    DATE
+    ASC
+    AS
+    FROM
+    WHERE
+    BETWEEN
+    AND
+    NOT
+    INNER
+    INSERT
+    INTO
+    IN
+    ORDER
+    OR
+    LIKE
+    IS
+    NULL
+    NULLS
+    COUNT
+    AVG
+    MAX
+    MIN
+    SUM
+    GROUP
+    BY
+    HAVING
+    LIMIT
+    CROSS
+    JOIN
+    ON
+    LEFT
+    OUTER
+    RIGHT
+    FULL
+    USING
+    EXISTS
+    DESC
+    VALUES
+    SCOPE
+    FIRST
+    LAST
+  )
+
+  def tokenize_ident(text)
+    if KEYWORDS.include?(text.upcase)
+      [:"#{text.upcase}", text]
+    else
+      [:identifier, text]
+    end
+  end
+
+
 macro
   DIGIT   [0-9]
   UINT    {DIGIT}+
@@ -13,7 +68,7 @@ macro
   DAYS    {UINT}
   DATE    {YEARS}-{MONTHS}-{DAYS}
 
-  IDENT   \w+
+  IDENT   [a-zA-Z_][a-zA-Z0-9_]*
 
 rule
 # [:state]  pattern       [actions]
@@ -35,47 +90,6 @@ rule
 # skip
             {BLANK}       # no action
 
-# keywords
-            SELECT        { [:SELECT, text] }
-            DATE          { [:DATE, text] }
-            ASC           { [:ASC, text] }
-            AS            { [:AS, text] }
-            FROM          { [:FROM, text] }
-            WHERE         { [:WHERE, text] }
-            BETWEEN       { [:BETWEEN, text] }
-            AND           { [:AND, text] }
-            NOT           { [:NOT, text] }
-            INNER         { [:INNER, text] }
-            INSERT        { [:INSERT, text] }
-            INTO          { [:INTO, text] }
-            IN            { [:IN, text] }
-            ORDER         { [:ORDER, text] }
-            OR            { [:OR, text] }
-            LIKE          { [:LIKE, text] }
-            IS            { [:IS, text] }
-            NULL          { [:NULL, text] }
-            COUNT         { [:COUNT, text] }
-            AVG           { [:AVG, text] }
-            MAX           { [:MAX, text] }
-            MIN           { [:MIN, text] }
-            SUM           { [:SUM, text] }
-            GROUP         { [:GROUP, text] }
-            BY            { [:BY, text] }
-            HAVING        { [:HAVING, text] }
-            LIMIT         { [:LIMIT, text] }
-            CROSS         { [:CROSS, text] }
-            JOIN          { [:JOIN, text] }
-            ON            { [:ON, text] }
-            LEFT          { [:LEFT, text] }
-            OUTER         { [:OUTER, text] }
-            RIGHT         { [:RIGHT, text] }
-            FULL          { [:FULL, text] }
-            USING         { [:USING, text] }
-            EXISTS        { [:EXISTS, text] }
-            DESC          { [:DESC, text] }
-            CURRENT_USER  { [:CURRENT_USER, text] }
-            VALUES        { [:VALUES, text] }
-
 # tokens
             <>            { [:not_equals_operator, text] }
             !=            { [:not_equals_operator, text] }
@@ -96,7 +110,7 @@ rule
 
 # identifier
             `{IDENT}`     { [:identifier, text[1..-2]] }
-            {IDENT}       { [:identifier, text] }
+            {IDENT}       { tokenize_ident(text) }
 
 ---- header ----
 require 'date'

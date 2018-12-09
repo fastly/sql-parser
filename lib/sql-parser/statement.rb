@@ -110,8 +110,9 @@ module SQLParser
 
     class TableExpression < Node
 
-      def initialize(from_clause, where_clause = nil, group_by_clause = nil, having_clause = nil, limit_clause = nil)
+      def initialize(from_clause, using_scope_clause = nil, where_clause = nil, group_by_clause = nil, having_clause = nil, limit_clause = nil)
         @from_clause = from_clause
+        @using_scope_clause = using_scope_clause
         @where_clause = where_clause
         @group_by_clause = group_by_clause
         @having_clause = having_clause
@@ -119,6 +120,7 @@ module SQLParser
       end
 
       attr_accessor :from_clause
+      attr_accessor :using_scope_clause
       attr_accessor :where_clause
       attr_accessor :group_by_clause
       attr_accessor :having_clause
@@ -136,6 +138,14 @@ module SQLParser
 
     end
 
+    class UsingScope < Node
+      def initialize(scope)
+        @scope = scope
+      end
+
+      attr_accessor :scope
+    end
+    
     class OrderClause < Node
 
       def initialize(columns)
@@ -146,20 +156,30 @@ module SQLParser
 
     end
 
-    class OrderSpecification < Node
+    class OrderColumn < Node
 
-      def initialize(column)
+      def initialize(column, order = nil, nulls_order = nil)
         @column = column
+        @order = order
+        @nulls_order = nulls_order
       end
 
       attr_accessor :column
+      attr_accessor :order
+      attr_accessor :nulls_order
 
     end
 
-    class Ascending < OrderSpecification
+    class Ascending < Node 
     end
 
-    class Descending < OrderSpecification
+    class Descending < Node
+    end
+
+    class NullsFirst < Node
+    end
+
+    class NullsLast < Node
     end
 
     class HavingClause < Node
@@ -345,6 +365,16 @@ module SQLParser
     class Count < Aggregate
     end
 
+    class Function < Node
+      def initialize(function, arguments)
+        @function = function
+        @arguments = arguments
+      end
+
+      attr_accessor :function
+      attr_accessor :arguments
+    end
+
     class JoinedTable < Node
 
       def initialize(left, right)
@@ -478,9 +508,6 @@ module SQLParser
     end
 
     class UnaryMinus < Unary
-    end
-
-    class CurrentUser < Node
     end
 
     class True < Node

@@ -23,16 +23,21 @@ rule
     | sort_specification
 
   sort_specification
-    : sort_key ordering_specification { result = val[1].new(val[0]) }
+    : sort_key ordering_specification nulls_ordering_specification { result = SQLParser::Statement::OrderColumn.new(val[0], val[1], val[2]) }
 
   sort_key
     : column_name
     | unsigned_integer { result = SQLParser::Statement::Integer.new(val[0]) }
 
   ordering_specification
-    : { result = SQLParser::Statement::Ascending } # default
-    | ASC { result = SQLParser::Statement::Ascending }
-    | DESC { result = SQLParser::Statement::Descending }
+    : # no action
+    | ASC { result = SQLParser::Statement::Ascending.new }
+    | DESC { result = SQLParser::Statement::Descending.new }
+
+  nulls_ordering_specification
+    : # no action
+    | NULLS FIRST { result = SQLParser::Statement::NullsFirst.new }
+    | NULLS LAST { result = SQLParser::Statement::NullsLast.new }
 
 # queries
   subquery
@@ -74,7 +79,7 @@ rule
     | value_expression
 
   table_expression
-    : from_clause where_clause group_by_clause having_clause limit_clause { result = SQLParser::Statement::TableExpression.new(val[0], val[1], val[2], val[3], val[4]) }
+    : from_clause using_scope_clause where_clause group_by_clause having_clause limit_clause { result = SQLParser::Statement::TableExpression.new(val[0], val[1], val[2], val[3], val[4], val[5]) }
 
   from_clause
     : FROM table_reference { result = SQLParser::Statement::FromClause.new(val[1]) }
@@ -121,6 +126,10 @@ rule
 
   join_column_list
     : column_name_list
+
+  using_scope_clause
+    : # no action
+    | USING SCOPE identifier { result = SQLParser::Statement::UsingScope.new(val[2]) }
 
   where_clause
     : # no action
@@ -256,14 +265,10 @@ rule
 
   unsigned_value_specification
     : unsigned_literal
-    | general_value_specification
 
   unsigned_literal
     : unsigned_numeric_literal
     | general_literal
-
-  general_value_specification
-    : CURRENT_USER { result = SQLParser::Statement::CurrentUser.new }
 
   column_reference
     : qualifier period column_name { result = SQLParser::Statement::QualifiedColumn.new(val[0], val[2]) }
@@ -282,6 +287,17 @@ rule
     | MAX left_paren value_expression right_paren { result = SQLParser::Statement::Maximum.new(val[2]) }
     | MIN left_paren value_expression right_paren { result = SQLParser::Statement::Minimum.new(val[2]) }
     | SUM left_paren value_expression right_paren { result = SQLParser::Statement::Sum.new(val[2]) }
+    | func_name left_paren func_arg_list right_paren { result = SQLParser::Statement::Function.new(val[0], val[2]) }
+
+  func_name
+    : identifier
+
+  func_arg_list
+    : func_args_list comma func_arg_expr
+    | func_arg_expr
+
+  func_arg_expr
+    : value_expression
 
 # literal numbers, strings, dates and times
   unsigned_numeric_literal

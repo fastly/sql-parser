@@ -54,6 +54,7 @@ module SQLParser
     def visit_TableExpression(o)
       [
         o.from_clause,
+        o.using_scope_clause,
         o.where_clause,
         o.group_by_clause,
         o.having_clause,
@@ -65,16 +66,36 @@ module SQLParser
       "FROM #{arrayize(o.tables)}"
     end
 
+    def visit_UsingScope(o)
+      "USING SCOPE #{o.scope}"
+    end
+
     def visit_OrderClause(o)
       "ORDER BY #{arrayize(o.columns)}"
     end
 
+    def visit_OrderColumn(o)
+      column = visit(o.column)
+      order = visit(o.order) if o.order
+      nulls_order = visit(o.nulls_order) if o.nulls_order
+
+      [column, order, nulls_order].compact.join(" ")
+    end
+
     def visit_Ascending(o)
-      "#{visit(o.column)} ASC"
+      "ASC"
     end
 
     def visit_Descending(o)
-      "#{visit(o.column)} DESC"
+      "DESC"
+    end
+
+    def visit_NullsFirst(o)
+      "NULLS FIRST"
+    end
+
+    def visit_NullsLast(o)
+      "NULLS LAST"
     end
 
     def visit_HavingClause(o)
@@ -201,6 +222,10 @@ module SQLParser
       aggregate('COUNT', o)
     end
 
+    def visit_Function(o)
+      "#{o.function}(#{visit(o.arguments)})"
+    end
+
     def visit_CrossJoin(o)
       "#{visit(o.left)} CROSS JOIN #{visit(o.right)}"
     end
@@ -289,10 +314,6 @@ module SQLParser
       'NULL'
     end
 
-    def visit_CurrentUser(o)
-      'CURRENT_USER'
-    end
-
     def visit_DateTime(o)
       "'%s'" % escape(o.value.strftime('%Y-%m-%d %H:%M:%S'))
     end
@@ -327,7 +348,8 @@ module SQLParser
     end
 
     def quote(str)
-      "`#{str}`"
+      str
+      # "`#{str}`"
     end
 
     def escape(str)

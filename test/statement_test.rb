@@ -2,11 +2,11 @@ require 'test_helper'
 
 class TestStatement < Minitest::Test
   def test_direct_select
-    assert_sql 'SELECT * FROM `users` ORDER BY `name`', SQLParser::Statement::DirectSelect.new(select(all, tblx(from(tbl('users')))), SQLParser::Statement::OrderBy.new(col('name')))
+    assert_sql 'SELECT * FROM users ORDER BY name', SQLParser::Statement::DirectSelect.new(select(all, tblx(from(tbl('users')))), SQLParser::Statement::OrderBy.new(col('name')))
   end
 
   def test_order_by
-    assert_sql 'ORDER BY `name`', SQLParser::Statement::OrderBy.new(col('name'))
+    assert_sql 'ORDER BY name', SQLParser::Statement::OrderBy.new(col('name'))
   end
 
   def test_subquery
@@ -15,16 +15,16 @@ class TestStatement < Minitest::Test
 
   def test_select
     assert_sql 'SELECT 1', select(int(1))
-    assert_sql 'SELECT * FROM `users`', select(all, tblx(from(tbl('users'))))
+    assert_sql 'SELECT * FROM users', select(all, tblx(from(tbl('users'))))
   end
 
   def test_select_list
-    assert_sql '`id`', slist(col('id'))
-    assert_sql '`id`, `name`', slist([col('id'), col('name')])
+    assert_sql 'id', slist(col('id'))
+    assert_sql 'id, name', slist([col('id'), col('name')])
   end
 
   def test_distinct
-    assert_sql 'DISTINCT(`username`)', distinct(col('username'))
+    assert_sql 'DISTINCT(username)', distinct(col('username'))
   end
 
   def test_all
@@ -32,63 +32,63 @@ class TestStatement < Minitest::Test
   end
 
   def test_table_expression
-    assert_sql 'FROM `users` WHERE `id` = 1 GROUP BY `name`', tblx(from(tbl('users')), where(equals(col('id'), int(1))), group_by(col('name')))
+    assert_sql 'FROM users WHERE id = 1 GROUP BY name', tblx(from(tbl('users')), where(equals(col('id'), int(1))), group_by(col('name')))
   end
 
   def test_limit
-    assert_sql 'FROM `users` LIMIT 2', tblx(from(tbl('users')), limit(int(2)))
+    assert_sql 'FROM users LIMIT 2', tblx(from(tbl('users')), limit(int(2)))
   end
 
   def test_from_clause
-    assert_sql 'FROM `users`', from(tbl('users'))
+    assert_sql 'FROM users', from(tbl('users'))
   end
 
   def test_full_outer_join
-    assert_sql '`t1` FULL OUTER JOIN `t2` ON `t1`.`a` = `t2`.`a`', SQLParser::Statement::FullOuterJoin.new(tbl('t1'), tbl('t2'), SQLParser::Statement::On.new(equals(qcol(tbl('t1'), col('a')), qcol(tbl('t2'), col('a')))))
-    assert_sql '`t1` FULL OUTER JOIN `t2` USING (`a`)', SQLParser::Statement::FullOuterJoin.new(tbl('t1'), tbl('t2'), SQLParser::Statement::Using.new(col('a')))
+    assert_sql 't1 FULL OUTER JOIN t2 ON t1.a = t2.a', SQLParser::Statement::FullOuterJoin.new(tbl('t1'), tbl('t2'), SQLParser::Statement::On.new(equals(qcol(tbl('t1'), col('a')), qcol(tbl('t2'), col('a')))))
+    assert_sql 't1 FULL OUTER JOIN t2 USING (a)', SQLParser::Statement::FullOuterJoin.new(tbl('t1'), tbl('t2'), SQLParser::Statement::Using.new(col('a')))
   end
 
   def test_full_join
-    assert_sql '`t1` FULL JOIN `t2` ON `t1`.`a` = `t2`.`a`', SQLParser::Statement::FullJoin.new(tbl('t1'), tbl('t2'), SQLParser::Statement::On.new(equals(qcol(tbl('t1'), col('a')), qcol(tbl('t2'), col('a')))))
+    assert_sql 't1 FULL JOIN t2 ON t1.a = t2.a', SQLParser::Statement::FullJoin.new(tbl('t1'), tbl('t2'), SQLParser::Statement::On.new(equals(qcol(tbl('t1'), col('a')), qcol(tbl('t2'), col('a')))))
   end
 
   def test_right_outer_join
-    assert_sql '`t1` RIGHT OUTER JOIN `t2` ON `t1`.`a` = `t2`.`a`', SQLParser::Statement::RightOuterJoin.new(tbl('t1'), tbl('t2'), SQLParser::Statement::On.new(equals(qcol(tbl('t1'), col('a')), qcol(tbl('t2'), col('a')))))
+    assert_sql 't1 RIGHT OUTER JOIN t2 ON t1.a = t2.a', SQLParser::Statement::RightOuterJoin.new(tbl('t1'), tbl('t2'), SQLParser::Statement::On.new(equals(qcol(tbl('t1'), col('a')), qcol(tbl('t2'), col('a')))))
   end
 
   def test_right_join
-    assert_sql '`t1` RIGHT JOIN `t2` ON `t1`.`a` = `t2`.`a`', SQLParser::Statement::RightJoin.new(tbl('t1'), tbl('t2'), SQLParser::Statement::On.new(equals(qcol(tbl('t1'), col('a')), qcol(tbl('t2'), col('a')))))
+    assert_sql 't1 RIGHT JOIN t2 ON t1.a = t2.a', SQLParser::Statement::RightJoin.new(tbl('t1'), tbl('t2'), SQLParser::Statement::On.new(equals(qcol(tbl('t1'), col('a')), qcol(tbl('t2'), col('a')))))
   end
 
   def test_left_outer_join
-    assert_sql '`t1` LEFT OUTER JOIN `t2` ON `t1`.`a` = `t2`.`a`', SQLParser::Statement::LeftOuterJoin.new(tbl('t1'), tbl('t2'), SQLParser::Statement::On.new(equals(qcol(tbl('t1'), col('a')), qcol(tbl('t2'), col('a')))))
+    assert_sql 't1 LEFT OUTER JOIN t2 ON t1.a = t2.a', SQLParser::Statement::LeftOuterJoin.new(tbl('t1'), tbl('t2'), SQLParser::Statement::On.new(equals(qcol(tbl('t1'), col('a')), qcol(tbl('t2'), col('a')))))
   end
 
   def test_left_join
-    assert_sql '`t1` LEFT JOIN `t2` ON `t1`.`a` = `t2`.`a`', SQLParser::Statement::LeftJoin.new(tbl('t1'), tbl('t2'), SQLParser::Statement::On.new(equals(qcol(tbl('t1'), col('a')), qcol(tbl('t2'), col('a')))))
+    assert_sql 't1 LEFT JOIN t2 ON t1.a = t2.a', SQLParser::Statement::LeftJoin.new(tbl('t1'), tbl('t2'), SQLParser::Statement::On.new(equals(qcol(tbl('t1'), col('a')), qcol(tbl('t2'), col('a')))))
   end
 
   def test_inner_join
-    assert_sql '`t1` INNER JOIN `t2` ON `t1`.`a` = `t2`.`a`', SQLParser::Statement::InnerJoin.new(tbl('t1'), tbl('t2'), SQLParser::Statement::On.new(equals(qcol(tbl('t1'), col('a')), qcol(tbl('t2'), col('a')))))
+    assert_sql 't1 INNER JOIN t2 ON t1.a = t2.a', SQLParser::Statement::InnerJoin.new(tbl('t1'), tbl('t2'), SQLParser::Statement::On.new(equals(qcol(tbl('t1'), col('a')), qcol(tbl('t2'), col('a')))))
   end
 
   def test_cross_join
-    assert_sql '`t1` CROSS JOIN `t2`', SQLParser::Statement::CrossJoin.new(tbl('t1'), tbl('t2'))
-    assert_sql '`t1` CROSS JOIN `t2` CROSS JOIN `t3`', SQLParser::Statement::CrossJoin.new(SQLParser::Statement::CrossJoin.new(tbl('t1'), tbl('t2')), tbl('t3'))
+    assert_sql 't1 CROSS JOIN t2', SQLParser::Statement::CrossJoin.new(tbl('t1'), tbl('t2'))
+    assert_sql 't1 CROSS JOIN t2 CROSS JOIN t3', SQLParser::Statement::CrossJoin.new(SQLParser::Statement::CrossJoin.new(tbl('t1'), tbl('t2')), tbl('t3'))
   end
 
   def test_order_clause
-    assert_sql 'ORDER BY `name` DESC', SQLParser::Statement::OrderClause.new(SQLParser::Statement::Descending.new(col('name')))
-    assert_sql 'ORDER BY `id` ASC, `name` DESC', SQLParser::Statement::OrderClause.new([SQLParser::Statement::Ascending.new(col('id')), SQLParser::Statement::Descending.new(col('name'))])
+    assert_sql 'ORDER BY name DESC', SQLParser::Statement::OrderClause.new(SQLParser::Statement::OrderColumn.new(col('name'), SQLParser::Statement::Descending.new))
+    assert_sql 'ORDER BY id ASC, name DESC', SQLParser::Statement::OrderClause.new([SQLParser::Statement::OrderColumn.new(col('id'), SQLParser::Statement::Ascending.new), SQLParser::Statement::OrderColumn.new(col('name'), SQLParser::Statement::Descending.new)])
   end
 
   def test_having_clause
-    assert_sql 'HAVING `id` = 1', SQLParser::Statement::HavingClause.new(equals(col('id'), int(1)))
+    assert_sql 'HAVING id = 1', SQLParser::Statement::HavingClause.new(equals(col('id'), int(1)))
   end
 
   def test_group_by_clause
-    assert_sql 'GROUP BY `name`', group_by(col('name'))
-    assert_sql 'GROUP BY `name`, `status`', group_by([col('name'), col('status')])
+    assert_sql 'GROUP BY name', group_by(col('name'))
+    assert_sql 'GROUP BY name, status', group_by([col('name'), col('status')])
   end
 
   def test_where_clause
@@ -160,19 +160,19 @@ class TestStatement < Minitest::Test
   end
 
   def test_sum
-    assert_sql 'SUM(`messages_count`)', SQLParser::Statement::Sum.new(col('messages_count'))
+    assert_sql 'SUM(messages_count)', SQLParser::Statement::Sum.new(col('messages_count'))
   end
 
   def test_minimum
-    assert_sql 'MIN(`age`)', SQLParser::Statement::Minimum.new(col('age'))
+    assert_sql 'MIN(age)', SQLParser::Statement::Minimum.new(col('age'))
   end
 
   def test_maximum
-    assert_sql 'MAX(`age`)', SQLParser::Statement::Maximum.new(col('age'))
+    assert_sql 'MAX(age)', SQLParser::Statement::Maximum.new(col('age'))
   end
 
   def test_average
-    assert_sql 'AVG(`age`)', SQLParser::Statement::Average.new(col('age'))
+    assert_sql 'AVG(age)', SQLParser::Statement::Average.new(col('age'))
   end
 
   def test_count
@@ -180,19 +180,19 @@ class TestStatement < Minitest::Test
   end
 
   def test_table
-    assert_sql '`users`', tbl('users')
+    assert_sql 'users', tbl('users')
   end
 
   def test_qualified_column
-    assert_sql '`users`.`id`', qcol(tbl('users'), col('id'))
+    assert_sql 'users.id', qcol(tbl('users'), col('id'))
   end
 
   def test_column
-    assert_sql '`id`', col('id')
+    assert_sql 'id', col('id')
   end
 
   def test_as
-    assert_sql '1 AS `a`', SQLParser::Statement::As.new(int(1), col('a'))
+    assert_sql '1 AS a', SQLParser::Statement::As.new(int(1), col('a'))
   end
 
   def test_multiply
@@ -229,10 +229,6 @@ class TestStatement < Minitest::Test
 
   def test_null
     assert_sql 'NULL', SQLParser::Statement::Null.new
-  end
-
-  def test_current_user
-    assert_sql 'CURRENT_USER', SQLParser::Statement::CurrentUser.new
   end
 
   def test_datetime
@@ -308,8 +304,8 @@ class TestStatement < Minitest::Test
     SQLParser::Statement::Select.new(list, table_expression)
   end
 
-  def tblx(from_clause, where_clause = nil, group_by_clause = nil, having_clause = nil)
-    SQLParser::Statement::TableExpression.new(from_clause, where_clause, group_by_clause, having_clause)
+  def tblx(from_clause, using_scope_clause = nil, where_clause = nil, group_by_clause = nil, having_clause = nil)
+    SQLParser::Statement::TableExpression.new(from_clause, using_scope_clause, where_clause, group_by_clause, having_clause)
   end
 
   def from(tables)
